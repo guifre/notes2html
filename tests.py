@@ -17,10 +17,13 @@ class ParserTest(unittest.TestCase):
             '    <head>\n' +
             '        <title></title>\n' +
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -34,10 +37,13 @@ class ParserTest(unittest.TestCase):
             '    <head>\n' +
             '        <title>title</title>\n' +
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -51,10 +57,13 @@ class ParserTest(unittest.TestCase):
             '    <head>\n' +
             '        <title></title>\n' +
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -69,8 +78,10 @@ class ParserTest(unittest.TestCase):
             '    <head>\n' +
             '        <title>title</title>\n' +
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -78,6 +89,7 @@ class ParserTest(unittest.TestCase):
             '                <ul>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -93,8 +105,10 @@ class ParserTest(unittest.TestCase):
             '    <head>\n' +
             '        <title>title</title>\n' +
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -105,6 +119,7 @@ class ParserTest(unittest.TestCase):
             '                    </span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -121,8 +136,10 @@ class ParserTest(unittest.TestCase):
             '    <head>\n' +
             '        <title>title</title>\n' +
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -133,6 +150,7 @@ class ParserTest(unittest.TestCase):
             '                    </span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -150,8 +168,10 @@ class ParserTest(unittest.TestCase):
             '    <head>\n' +
             '        <title>title</title>\n' +
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -165,6 +185,7 @@ class ParserTest(unittest.TestCase):
             '                    </span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -181,8 +202,10 @@ class ParserTest(unittest.TestCase):
             '    <head>\n' +
             '        <title>title</title>\n' +
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -196,6 +219,7 @@ class ParserTest(unittest.TestCase):
             '                    </span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -217,8 +241,10 @@ class ParserTest(unittest.TestCase):
             '    <head>\n' +
             '        <title>title</title>\n' +
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -243,6 +269,7 @@ class ParserTest(unittest.TestCase):
             '                    </span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -270,8 +297,10 @@ class ParserTest(unittest.TestCase):
             '    <head>\n' +
             '        <title>alpha</title>\n' +
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -320,6 +349,7 @@ class ParserTest(unittest.TestCase):
             '                    </span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -329,11 +359,8 @@ class ParserTest(unittest.TestCase):
         self.assertRaises(Exception, run)
 
     def test_whenFilesNotFound_thenExceptionRaised(self):
-        sys.argv = ['bin', 'in', 'out', 'out']
+        sys.argv = ['bin', 'in']
         self.assertRaises(Exception, run)
-
-    def assert_markup_generated(self, input, expected):
-        assert parse(string.split(input, '\n')) == expected
 
     @mock.patch('notes2html.os.listdir')
     def test_whenEmptyFiles_thenFilesOpen(self, mock_listdir):
@@ -342,3 +369,233 @@ class ParserTest(unittest.TestCase):
         with patch('notes2html.open', create=True) as mock_open:
             mock_open.return_value = MagicMock(spec=file)
             self.assertRaises(StopIteration, run)
+
+    def test_whenNarrativeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenNarrativeAttributeAndSubtitle_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n'
+            'bravo',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenNarrativeAttributeAndSubtitleAndParagraph_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n'
+            'bravo\n'
+            '    charlie',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <p>charlie</p>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenNarrativeAttributeAndSubtitleAndMultipleParagraphs_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n'
+            'bravo\n'
+            '    charlie\n' +
+            '    delta\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <p>charlie</p>\n' +
+            '                <p>delta</p>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenNarrativeAttributeAndSubtitleAndMultipleComplexParagraphs_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n' +
+            'bravo\n' +
+            '    charlie\n' +
+            '    delta\n' +
+            '\n\n'
+            'echo\n' +
+            '    foxtrot\n' +
+            '    golf\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <p>charlie</p>\n' +
+            '                <p>delta</p>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>echo</legend>\n' +
+            '                <p>foxtrot</p>\n' +
+            '                <p>golf</p>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenNarrativeAttributeAndCodeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n' +
+            'bravo\n' +
+            '    charlie\n' +
+            '    *delta*\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <p>charlie</p>\n' +
+            '                <pre><code>delta</code></pre>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenNarrativeAttributeAndTwoLineCodeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n' +
+            'bravo\n' +
+            '    charlie\n' +
+            '    *delta\n'
+            '\n'
+            '    echo*\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <p>charlie</p>\n' +
+            '                <pre><code>delta\n'
+            # '\n' +
+            'echo</code></pre>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenNarrativeAttributeAndMultipleLineCodeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n' +
+            'bravo\n' +
+            '    charlie\n' +
+            '    *delta\n' +
+            '    echo\n' +
+            '    foxtrot*\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <p>charlie</p>\n' +
+            '                <pre><code>delta\n'
+            'echo\n'
+            'foxtrot</code></pre>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def assert_markup_generated(self, input, expected):
+        self.assertEqual(parse(string.split(input, '\n')), expected)
