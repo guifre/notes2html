@@ -162,9 +162,10 @@ def get_list_body(param):
                 nested_text = ''
             code = re.match(TEXT_PREFIX + '\*(.*?)\*', line)
             if code:
-                text += ENTRY_END
+                if state == 'text':
+                    text += ENTRY_END
                 text += ENTRY_CODE % clean_line(code.group(1))
-                state = 'finished_code'
+                state = 'code'
             elif line.startswith(TEXT_PREFIX + "*"):
                 text += ENTRY_CODE_START + clean_line(line[len(TEXT_PREFIX + "*"):]) + '\n'
                 state = 'code'
