@@ -1,3 +1,4 @@
+import cgi
 import os
 import re
 
@@ -80,7 +81,7 @@ def get_title(param):
 
 
 def clean_line(param):
-    return param.replace('\n', '')
+    return cgi.escape(param.replace('\n', ''))
 
 
 def tabs_to_spaces(line):
@@ -149,7 +150,7 @@ def get_list_body(param):
         if len(line) == 0:
             continue
 
-        if line.startswith(NESTED_TEXT_PREFIX):
+        if line.startswith(NESTED_TEXT_PREFIX) and state != 'code':
             if state == 'title':
                 text = EMPTY_ENTRY
             state = 'nested'
@@ -159,11 +160,25 @@ def get_list_body(param):
             if state == 'nested':
                 text += flush_nested(nested_text)
                 nested_text = ''
-            if state == 'text':
+            code = re.match(TEXT_PREFIX + '\*(.*?)\*', line)
+            if code:
                 text += ENTRY_END
-
-            text += ENTRY_START % clean_line(line[len(TEXT_PREFIX):])
-            state = 'text'
+                text += ENTRY_CODE % clean_line(code.group(1))
+                state = 'finished_code'
+            elif line.startswith(TEXT_PREFIX + "*"):
+                text += ENTRY_CODE_START + clean_line(line[len(TEXT_PREFIX + "*"):]) + '\n'
+                state = 'code'
+            elif state == 'code' and line.endswith('*'):
+                text += ENTRY_CODE_END % clean_line(line[4:-1])
+                state = 'text'
+            elif state == 'code' and not line.endswith('*'):
+                text += ENTRY_CODE_MIDDLE % clean_line(line[4:])
+                state = 'code'
+            else:
+                if state == 'text':
+                    text += ENTRY_END
+                text += ENTRY_START % add_strong_tag(clean_line(line[len(TEXT_PREFIX):]))
+                state = 'text'
 
         elif not line.startswith(' '):
             if state == 'nested':

@@ -623,5 +623,138 @@ class ParserTest(unittest.TestCase):
             '</html>'
         )
 
+    def test_whenTextAttributeAndCodeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*\n' +
+            'bravo\n' +
+            '    charlie\n' +
+            '    *delta*\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span>\n'
+            '                        charlie\n'
+            '                    </span></li>\n' +
+            '                <pre><code>delta</code></pre>\n'
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenTextAttributeAndTwoLineCodeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*\n' +
+            'bravo\n' +
+            '    charlie\n' +
+            '    *delta\n'
+            '\n'
+            '    echo*\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span>\n'
+            '                        charlie\n'
+            '                <pre><code>delta\n'
+            'echo</code></pre>\n' +
+            '                    </span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenTextAttributeAndMultipleLineCodeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*\n' +
+            'bravo\n' +
+            '    charlie\n' +
+            '    *delta\n' +
+            '    echo\n' +
+            '        foxtrot*\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span>\n'
+            '                        charlie\n'
+            '                <pre><code>delta\n'
+            'echo\n'
+            '    foxtrot</code></pre>\n' +
+            '                    </span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenTextHasStrongTag_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*\n' +
+            'bravo\n' +
+            '    charlie *<delta>* echo\n',
+
+            '<!DOCTYPE html>\n'
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span>\n'
+            '                        charlie <strong>&lt;delta&gt;</strong> echo\n'
+            '                    </span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
     def assert_markup_generated(self, input, expected):
         self.assertEqual(parse(string.split(input, '\n')), expected)
