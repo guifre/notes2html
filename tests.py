@@ -213,10 +213,10 @@ class ParserTest(unittest.TestCase):
             '                <ul>\n' +
             '                    <li><span>\n'
             '                        text\n' +
+            '                    </span></li>\n' +
             '                        <ul>\n' +
             '                            <li><span>nested</span></li>\n' +
             '                        </ul>\n' +
-            '                    </span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -308,10 +308,10 @@ class ParserTest(unittest.TestCase):
             '                <ul>\n' +
             '                    <li><span>\n'
             '                        charlie\n' +
+            '                    </span></li>\n' +
             '                        <ul>\n' +
             '                            <li><span>delta</span></li>\n' +
             '                        </ul>\n'
-            '                    </span></li>\n' +
             '                    <li><span>\n'
             '                        echo\n'
             '                    </span></li>\n' +
@@ -320,30 +320,26 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>foxtrot</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
             '                        <ul>\n' +
             '                            <li><span>golf</span></li>\n' +
             '                        </ul>\n' +
-            '                    </span></li>\n'
             '                    <li><span>\n'
             '                        hotel\n'
             '                    </span></li>\n' +
             '                    <li><span>\n'
             '                        india\n' +
+            '                    </span></li>\n' +
             '                        <ul>\n' +
             '                            <li><span>juliett</span></li>\n' +
             '                        </ul>\n' +
-            '                    </span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '        <fieldset class=\'box\'>\n' +
             '            <legend>kilo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
             '                        <ul>\n' +
             '                            <li><span>lima</span></li>\n' +
             '                        </ul>\n'
-            '                    </span></li>\n' +
             '                    <li><span>\n'
             '                        mike\n'
             '                    </span></li>\n' +
@@ -680,9 +676,9 @@ class ParserTest(unittest.TestCase):
             '                <ul>\n' +
             '                    <li><span>\n'
             '                        charlie\n'
+            '                    </span></li>\n' +
             '                <pre><code>delta\n'
             'echo</code></pre>\n' +
-            '                    </span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -715,10 +711,10 @@ class ParserTest(unittest.TestCase):
             '                <ul>\n' +
             '                    <li><span>\n'
             '                        charlie\n'
+            '                    </span></li>\n' +
             '                <pre><code>delta\n'
             'echo\n'
             '    foxtrot</code></pre>\n' +
-            '                    </span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -777,6 +773,40 @@ class ParserTest(unittest.TestCase):
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                <pre><code>charlie delta</code></pre>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenTextHasMultipleCodeblocksTagAndLists_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*\n' +
+            'bravo\n' +
+            '    *charlie*\n' +
+            '    delta\n' +
+            '    *echo*\n',
+
+            '<!DOCTYPE html>\n'
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <ul>\n' +
+            '                <pre><code>charlie</code></pre>\n' +
+            '                    <li><span>\n'
+            '                        delta\n'
+            '                    </span></li>\n' +
+            '                <pre><code>echo</code></pre>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +

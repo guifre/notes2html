@@ -151,21 +151,15 @@ def get_list_body(param):
             continue
 
         if line.startswith(NESTED_TEXT_PREFIX) and state != 'code':
-            if state == 'title':
-                text = EMPTY_ENTRY
             state = 'nested'
             nested_text += NESTED_ENTRY % clean_line(line[len(NESTED_TEXT_PREFIX):])
-
         elif line.startswith(TEXT_PREFIX):
             if state == 'nested':
                 text += flush_nested(nested_text)
                 nested_text = ''
             code = re.match(TEXT_PREFIX + '\*(.*?)\*', line)
             if code:
-                if state == 'text':
-                    text += ENTRY_END
                 text += ENTRY_CODE % clean_line(code.group(1))
-                state = 'code'
             elif line.startswith(TEXT_PREFIX + "*"):
                 text += ENTRY_CODE_START + clean_line(line[len(TEXT_PREFIX + "*"):]) + '\n'
                 state = 'code'
@@ -174,19 +168,13 @@ def get_list_body(param):
                 state = 'text'
             elif state == 'code' and not line.endswith('*'):
                 text += ENTRY_CODE_MIDDLE % clean_line(line[4:])
-                state = 'code'
             else:
-                if state == 'text':
-                    text += ENTRY_END
-                text += ENTRY_START % add_strong_tag(clean_line(line[len(TEXT_PREFIX):]))
+                text += ENTRY_START % add_strong_tag(clean_line(line[len(TEXT_PREFIX):])) + ENTRY_END
                 state = 'text'
-
         elif not line.startswith(' '):
             if state == 'nested':
                 text += flush_nested(nested_text)
                 nested_text = ''
-            if state == 'text':
-                text += ENTRY_END
             state = 'title'
             if sub_title != '':
                 body += BOX % (sub_title, text)
@@ -194,15 +182,13 @@ def get_list_body(param):
             sub_title = clean_line(line)
     if sub_title == '' and body == '' and text == '':
         return ''
-    if state == 'text':
-        text += ENTRY_END
     if state == 'nested':
         text += flush_nested(nested_text)
     return body + BOX % (sub_title, text)
 
 
 def flush_nested(nested_text):
-    return ENTRY_BLOCK % nested_text + ENTRY_END
+    return ENTRY_BLOCK % nested_text
 
 
 if __name__ == "__main__":
