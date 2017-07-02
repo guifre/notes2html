@@ -88,10 +88,14 @@ def tabs_to_spaces(line):
     return line.replace('\t\t\t', '         ').replace('\t\t', '     ').replace('\t', ' ').replace('\n', '')
 
 def add_strong_tag(line):
-    strong_entities = re.findall('\\*(.*?)\\*', line)
+    strong_entities = re.findall('[^\\\\]\\*(.*?)\\*', line)
     for strong_entity in strong_entities:
         line = line.replace('*%s*' % strong_entity, '<strong>%s</strong>' % strong_entity)
     return line
+
+def unescape(line):
+    return line.replace('\\*', '*')
+
 
 def get_narrative_body(param):
     iter_text = iter(param)
@@ -122,7 +126,7 @@ def get_narrative_body(param):
                 elif state == 'code' and not c_line.endswith('*'):
                     text += ENTRY_CODE_MIDDLE % clean_line(c_line[4:])
                 else:
-                    text += ENTRY_NARRATIVE % add_strong_tag(clean_line(c_line[len(TEXT_PREFIX):]))
+                    text += ENTRY_NARRATIVE % unescape(add_strong_tag(clean_line(c_line[len(TEXT_PREFIX):])))
                     state = 'text'
 
         elif not c_line.startswith(' '):
@@ -169,7 +173,7 @@ def get_list_body(param):
             elif state == 'code' and not line.endswith('*'):
                 text += ENTRY_CODE_MIDDLE % clean_line(line[4:])
             else:
-                text += ENTRY_START % add_strong_tag(clean_line(line[len(TEXT_PREFIX):])) + ENTRY_END
+                text += ENTRY_START % unescape(add_strong_tag(clean_line(line[len(TEXT_PREFIX):]))) + ENTRY_END
                 state = 'text'
         elif not line.startswith(' '):
             if state == 'nested':

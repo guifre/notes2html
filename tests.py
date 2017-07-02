@@ -814,6 +814,146 @@ class ParserTest(unittest.TestCase):
             '</html>'
         )
 
+    def test_whenTextEscapedCodeBlocks_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*\n' +
+            'bravo\n' +
+            '    \\*charlie\\*\n' +
+            '    delta\n' +
+            '    *echo*\n',
+
+            '<!DOCTYPE html>\n'
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span>\n'
+            '                        *charlie*\n'
+            '                    </span></li>\n' +
+            '                    <li><span>\n'
+            '                        delta\n'
+            '                    </span></li>\n' +
+            '                <pre><code>echo</code></pre>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenTextEscapedStrongBlocks_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*\n' +
+            'bravo\n' +
+            '    \\*charlie\\* delta\n' +
+            '    *echo*\n',
+
+            '<!DOCTYPE html>\n'
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span>\n'
+            '                        *charlie* delta\n'
+            '                    </span></li>\n' +
+            '                <pre><code>echo</code></pre>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenNarrativeAttributeAndSubtitleAndMultipleComplexParagraphsAndEscapedCodeBlocks_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n' +
+            'bravo\n' +
+            '    charlie\n' +
+            '    \\*delta\\*\n' +
+            '\n\n'
+            'echo\n' +
+            '    foxtrot\n' +
+            '    golf\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <p>charlie</p>\n' +
+            '                <p>*delta*</p>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>echo</legend>\n' +
+            '                <p>foxtrot</p>\n' +
+            '                <p>golf</p>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenNarrativeAttributeAndSubtitleAndMultipleComplexParagraphsAndEscapedStrongBlocks_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n' +
+            'bravo\n' +
+            '    charlie \\*delta\\*\n' +
+            '\n\n'
+            'echo\n' +
+            '    foxtrot\n' +
+            '    golf\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <p>charlie *delta*</p>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>echo</legend>\n' +
+            '                <p>foxtrot</p>\n' +
+            '                <p>golf</p>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
     def assert_markup_generated(self, input, expected):
         actual = parse(string.split(input, '\n'))
         self.assertEqual(actual, expected, actual)
