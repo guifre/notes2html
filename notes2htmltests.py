@@ -784,6 +784,38 @@ class ParserTest(unittest.TestCase):
             '</html>'
         )
 
+    def test_whenListHasNestedCodeWithLiteralStarCharacter_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*\n' +
+            'bravo\n' +
+            '    charlie\n'+
+            '        *delta echo* foxtrot*\n',
+
+            '<!DOCTYPE html>\n'
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span>\n'
+            '                        charlie\n'
+            '                    </span></li>\n' +
+            '                <pre><code>delta echo* foxtrot</code></pre>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
     def test_whenTextHasStrongTagAndLists_thenExpectedMarkupBuilt(self):
         self.assert_markup_generated(
             '*alpha*\n' +

@@ -112,7 +112,7 @@ def get_narrative_body(param):
         elif len(c_line) == 0 or c_line == '\n':
             continue
         elif c_line.startswith(TEXT_PREFIX):
-            code = re.match(TEXT_PREFIX + '\*(.*?)\*', c_line)
+            code = re.match(TEXT_PREFIX + '\*(.*)\*', c_line)
             if code:
                 text += ENTRY_CODE % clean_line(code.group(1))
                 state = 'text'
@@ -155,7 +155,7 @@ def get_list_body(param):
             continue
 
         if line.startswith(NESTED_TEXT_PREFIX) and state != 'code':
-            code = re.match(NESTED_TEXT_PREFIX + '\*(.*?)\*', line)
+            code = re.match(NESTED_TEXT_PREFIX + '\*(.*)\*', line)
             if code:
                 text += ENTRY_CODE % clean_line(code.group(1))
             else:
@@ -165,7 +165,7 @@ def get_list_body(param):
             if state == 'nested':
                 text += flush_nested(nested_text)
                 nested_text = ''
-            code = re.match(TEXT_PREFIX + '\*(.*?)\*', line)
+            code = re.match(TEXT_PREFIX + '\*(.*)\*', line)
             if code:
                 text += ENTRY_CODE % clean_line(code.group(1))
             elif line.startswith(TEXT_PREFIX + "*"):
