@@ -155,8 +155,12 @@ def get_list_body(param):
             continue
 
         if line.startswith(NESTED_TEXT_PREFIX) and state != 'code':
-            state = 'nested'
-            nested_text += NESTED_ENTRY % clean_line(line[len(NESTED_TEXT_PREFIX):])
+            code = re.match(NESTED_TEXT_PREFIX + '\*(.*?)\*', line)
+            if code:
+                text += ENTRY_CODE % clean_line(code.group(1))
+            else:
+                state = 'nested'
+                nested_text += NESTED_ENTRY % clean_line(line[len(NESTED_TEXT_PREFIX):])
         elif line.startswith(TEXT_PREFIX):
             if state == 'nested':
                 text += flush_nested(nested_text)
