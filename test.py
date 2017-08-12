@@ -1,3 +1,4 @@
+import re
 import string
 import sys
 import unittest
@@ -69,29 +70,10 @@ class ParserTest(unittest.TestCase):
         )
 
     def test_whenTextHasTitleAndSubtitle_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
+        self.assert_exception_thrown(
             '*title*\n' +
             'Subtitle',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>title</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>Subtitle</legend>\n' +
-            '                <ul>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
-            '    </body>\n' +
-            '</html>'
+            "Failed to parse, found title[Subtitle] with no text"
         )
 
     def test_whenTextHasTitleAndSubtitleAndText_thenExpectedMarkupBuilt(self):
@@ -114,9 +96,7 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>subtitle</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        text\n'
-            '                    </span></li>\n' +
+            '                    <li><span>text</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -145,9 +125,7 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>subtitle</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        text\n'
-            '                    </span></li>\n' +
+            '                    <li><span>text</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -177,12 +155,8 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>subtitle</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        first text line\n'
-            '                    </span></li>\n' +
-            '                    <li><span>\n'
-            '                        second text line\n'
-            '                    </span></li>\n' +
+            '                    <li><span>first text line</span></li>\n' +
+            '                    <li><span>second text line</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -211,9 +185,7 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>subtitle</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        text\n' +
-            '                    </span></li>\n' +
+            '                    <li><span>text</span></li>\n' +
             '                        <ul>\n' +
             '                            <li><span>nested</span></li>\n' +
             '                        </ul>\n' +
@@ -250,23 +222,15 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>first subtitle</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        first text line\n'
-            '                    </span></li>\n' +
-            '                    <li><span>\n'
-            '                        second text line\n'
-            '                    </span></li>\n' +
+            '                    <li><span>first text line</span></li>\n' +
+            '                    <li><span>second text line</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '        <fieldset class=\'box\'>\n' +
             '            <legend>second subtitle</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        first text line of the second block\n'
-            '                    </span></li>\n' +
-            '                    <li><span>\n'
-            '                        second text line of the second block\n'
-            '                    </span></li>\n' +
+            '                    <li><span>first text line of the second block</span></li>\n' +
+            '                    <li><span>second text line of the second block</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -306,15 +270,11 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        charlie\n' +
-            '                    </span></li>\n' +
+            '                    <li><span>charlie</span></li>\n' +
             '                        <ul>\n' +
             '                            <li><span>delta</span></li>\n' +
             '                        </ul>\n'
-            '                    <li><span>\n'
-            '                        echo\n'
-            '                    </span></li>\n' +
+            '                    <li><span>echo</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -323,12 +283,8 @@ class ParserTest(unittest.TestCase):
             '                        <ul>\n' +
             '                            <li><span>golf</span></li>\n' +
             '                        </ul>\n' +
-            '                    <li><span>\n'
-            '                        hotel\n'
-            '                    </span></li>\n' +
-            '                    <li><span>\n'
-            '                        india\n' +
-            '                    </span></li>\n' +
+            '                    <li><span>hotel</span></li>\n' +
+            '                    <li><span>india</span></li>\n' +
             '                        <ul>\n' +
             '                            <li><span>juliett</span></li>\n' +
             '                        </ul>\n' +
@@ -340,9 +296,7 @@ class ParserTest(unittest.TestCase):
             '                        <ul>\n' +
             '                            <li><span>lima</span></li>\n' +
             '                        </ul>\n'
-            '                    <li><span>\n'
-            '                        mike\n'
-            '                    </span></li>\n' +
+            '                    <li><span>mike</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -364,7 +318,7 @@ class ParserTest(unittest.TestCase):
         mock_listdir.return_value = ['a.txt']
         with patch('notes2html.open', create=True) as mock_open:
             mock_open.return_value = MagicMock(spec=file)
-            self.assertRaises(StopIteration, run)
+            run()
 
     def test_whenNarrativeAttribute_thenExpectedMarkupBuilt(self):
         self.assert_markup_generated(
@@ -386,28 +340,11 @@ class ParserTest(unittest.TestCase):
             '</html>'
         )
 
-    def test_whenNarrativeAttributeAndSubtitle_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
+    def test_whenNarrativeAttributeAndSubtitle_thenExceptionThrown(self):
+        self.assert_exception_thrown(
             '*alpha*narrative\n'
             'bravo',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>bravo</legend>\n' +
-            '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
-            '    </body>\n' +
-            '</html>'
+            'Failed to parse, found title[bravo] with no text'
         )
 
     def test_whenNarrativeAttributeAndSubtitleAndParagraph_thenExpectedMarkupBuilt(self):
@@ -506,7 +443,7 @@ class ParserTest(unittest.TestCase):
             '*alpha*narrative\n' +
             'bravo\n' +
             '    charlie\n' +
-            '    *delta*\n',
+            '    *delta* echo\n',
 
             '<!DOCTYPE html>\n' +
             '<html>\n' +
@@ -522,7 +459,7 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
-            '                <pre><code>delta</code></pre>\n' +
+            '                <p><strong>delta</strong> echo</p>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
@@ -553,21 +490,20 @@ class ParserTest(unittest.TestCase):
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
             '                <pre><code>delta\n'
-            # '\n' +
-            'echo</code></pre>\n' +
+            '    echo</code></pre>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
         )
 
-    def test_whenNarrativeAttributeAndMultipleLineCodeAttribute_thenExpectedMarkupBuilt(self):
+    def test_whenNarrativeAttributeAndMultipleLineCodeAttributeAndCodeHasMassiveIndentation_thenExpectedMarkupBuilt(self):
         self.assert_markup_generated(
             '*alpha*narrative\n' +
             'bravo\n' +
             '    charlie\n' +
             '    *delta\n' +
-            '    echo\n' +
+            '                      echo\n' +
             '    foxtrot*\n',
 
             '<!DOCTYPE html>\n' +
@@ -585,8 +521,8 @@ class ParserTest(unittest.TestCase):
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
             '                <pre><code>delta\n'
-            'echo\n'
-            'foxtrot</code></pre>\n' +
+            '                      echo\n'
+            '    foxtrot</code></pre>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
@@ -640,10 +576,8 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        charlie\n'
-            '                    </span></li>\n' +
-            '                <pre><code>delta</code></pre>\n'
+            '                    <li><span>charlie</span></li>\n' +
+            '                    <li><span><strong>delta</strong></span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -658,7 +592,7 @@ class ParserTest(unittest.TestCase):
             '    charlie\n' +
             '    *delta\n'
             '\n'
-            '    echo*\n',
+            'echo*\n',
 
             '<!DOCTYPE html>\n' +
             '<html>\n' +
@@ -674,9 +608,7 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        charlie\n'
-            '                    </span></li>\n' +
+            '                    <li><span>charlie</span></li>\n' +
             '                <pre><code>delta\n'
             'echo</code></pre>\n' +
             '                </ul>\n' +
@@ -692,7 +624,7 @@ class ParserTest(unittest.TestCase):
             'bravo\n' +
             '    charlie\n' +
             '    *delta\n' +
-            '    echo\n' +
+            'echo\n' +
             '        foxtrot*\n',
 
             '<!DOCTYPE html>\n' +
@@ -709,12 +641,10 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        charlie\n'
-            '                    </span></li>\n' +
+            '                    <li><span>charlie</span></li>\n' +
             '                <pre><code>delta\n'
             'echo\n'
-            '    foxtrot</code></pre>\n' +
+            '        foxtrot</code></pre>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -742,9 +672,7 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        charlie <strong>&lt;delta&gt;</strong> echo\n'
-            '                    </span></li>\n' +
+            '                    <li><span>charlie <strong>&lt;delta&gt;</strong> echo</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -773,10 +701,42 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        charlie\n'
-            '                    </span></li>\n' +
+            '                    <li><span>charlie</span></li>\n' +
             '                <pre><code>delta echo</code></pre>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenListHasTwoLevelsNestedCode_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*\n' +
+            'bravo\n' +
+            '    charlie\n'+
+            '        delta\n' +
+            '    *echo* foxtrot\n',
+
+            '<!DOCTYPE html>\n'
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span>charlie</span></li>\n' +
+            '                        <ul>\n' +
+            '                            <li><span>delta</span></li>\n' +
+            '                        </ul>\n' +
+            '                    <li><span><strong>echo</strong> foxtrot</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -805,15 +765,36 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        charlie\n'
-            '                    </span></li>\n' +
+            '                    <li><span>charlie</span></li>\n' +
             '                <pre><code>delta echo* foxtrot</code></pre>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
             '    </body>\n' +
             '</html>'
+        )
+
+    def test_whenListHasOneSpaceInFirstLevel_thenErrorThrown(self):
+        self.assert_exception_thrown(
+            '*alpha*\n' +
+            ' bravo\n',
+            'Unsupported number of spaces [1] in line [ bravo]'
+        )
+
+    def test_whenListHasTooNestedElement_thenErrorThrown(self):
+        self.assert_exception_thrown(
+            '*alpha*\n' +
+            'bravo\n' +
+            '                                                     charlie\n',
+            'Unsupported number of spaces [53] in line [                                                     charlie]'
+        )
+
+    def test_whenListHasTwoEmptyTitles_thenErrorThrown(self):
+        self.assert_exception_thrown(
+            '*alpha*\n' +
+            'bravo\n' +
+            'charlie\n',
+            'Failed to parse, found title[charlie] with no text'
         )
 
     def test_whenTextHasStrongTagAndLists_thenExpectedMarkupBuilt(self):
@@ -850,7 +831,7 @@ class ParserTest(unittest.TestCase):
             'bravo\n' +
             '    *charlie*\n' +
             '    delta\n' +
-            '    *echo*\n',
+            '    *echo foxtrot*\n',
 
             '<!DOCTYPE html>\n'
             '<html>\n' +
@@ -866,11 +847,9 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                <pre><code>charlie</code></pre>\n' +
-            '                    <li><span>\n'
-            '                        delta\n'
-            '                    </span></li>\n' +
-            '                <pre><code>echo</code></pre>\n' +
+            '                    <li><span><strong>charlie</strong></span></li>\n' +
+            '                    <li><span>delta</span></li>\n' +
+            '                <pre><code>echo foxtrot</code></pre>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -900,13 +879,43 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        *charlie*\n'
-            '                    </span></li>\n' +
-            '                    <li><span>\n'
-            '                        delta\n'
-            '                    </span></li>\n' +
-            '                <pre><code>echo</code></pre>\n' +
+            '                    <li><span>*charlie*</span></li>\n' +
+            '                    <li><span>delta</span></li>\n' +
+            '                    <li><span><strong>echo</strong></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
+    def test_whenTextEscapedCodeBlocksAndHasThreeNestedLevels_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*\n' +
+            'bravo\n' +
+            '    \\*charlie\\*\n' +
+            '    delta\n' +
+            '        echo\n',
+
+            '<!DOCTYPE html>\n'
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span>*charlie*</span></li>\n' +
+            '                    <li><span>delta</span></li>\n' +
+            '                        <ul>\n'
+            '                            <li><span>echo</span></li>\n' +
+            '                        </ul>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -935,10 +944,8 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>\n'
-            '                        *charlie* delta\n'
-            '                    </span></li>\n' +
-            '                <pre><code>echo</code></pre>\n' +
+            '                    <li><span>*charlie* delta</span></li>\n' +
+            '                    <li><span><strong>echo</strong></span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
@@ -1020,4 +1027,12 @@ class ParserTest(unittest.TestCase):
 
     def assert_markup_generated(self, input, expected):
         actual = parse(string.split(input, '\n'))
-        self.assertEqual(actual, expected, actual)
+        a = actual.split("\n")
+        e = expected.split("\n")
+        for i in range(0, len(a)):
+            self.assertEqual(a[i], e[i], actual + '\n' + expected + '\n' + a[i] +'\n' + e[i])
+        self.assertEqual(expected, actual)
+
+    def assert_exception_thrown(self, input, message):
+        with self.assertRaisesRegexp(Exception, re.escape(message)):
+            parse(string.split(input, '\n'))

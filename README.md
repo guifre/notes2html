@@ -3,3 +3,5 @@
 I write notes of random topics and I wanted to keep them online for easy access. However, I hate writing HTML.
 
 text2html transforms my notes to basic HTML. The workflow is just writing and pushing a note. After this, a git hook triggers a text2html job that builds the notes and synchronizes it to http://guif.re
+
+To run unit tests: $ coverage run -m unittest discover; coverage html

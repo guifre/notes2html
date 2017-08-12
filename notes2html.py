@@ -7,8 +7,7 @@ import sys
 
 def run():
     if len(sys.argv) < 3:
-        print 'Usage: $ python %s src_dir dst_dir' % sys.argv[0]
-        raise Exception
+        raise Exception('Usage: $ python %s src_dir dst_dir' % sys.argv[0])
 
     for a_file in [os.path.join(dp, f) for dp, dn, filenames in os.walk(sys.argv[1]) for f in filenames if os.path.splitext(f)[1] == '.txt']:
         with open(a_file) as read:
@@ -16,15 +15,18 @@ def run():
             if not os.path.exists(out_file[:out_file.rindex('/')]):
                 os.makedirs(out_file[:out_file.rindex('/')])
             with open(out_file, 'w') as write:
-                write.write(parse(read.readlines()))
+                try:
+                    write.write(parse(read.readlines()))
+                except Exception as e:
+                    print 'Error when parsing [%s] [%s]' % (a_file, str(e))
 
 
 def parse(param):
     title = get_title(param)
     if title['is_narrative']:
-        body = get_narrative_body(param)
+        body = get_list_body(param, BOX_NARRATIVE, TEXT_BOX_NARRAtIVE, True)
     else:
-        body = get_list_body(param)
+        body = get_list_body(param, BOX, SECOND_LEVEL_ENTRY, False)
 
     return BODY % (title['value'], body)
 
@@ -51,24 +53,20 @@ BOX = '        <fieldset class=\'box\'>\n' + \
       '%s' + \
       '                </ul>\n' + \
       '        </fieldset>\n'
-EMPTY_ENTRY = '                    <li><span>\n'
-ENTRY_START = EMPTY_ENTRY + '                        %s\n'
-ENTRY_END = '                    </span></li>\n'
-ENTRY_BLOCK = '                        <ul>\n%s                        </ul>\n'
-NESTED_ENTRY = '                            <li><span>%s</span></li>\n'
-NESTED_TEXT_PREFIX = '        '
-TEXT_PREFIX = '    '
 
 BOX_NARRATIVE = \
     '        <fieldset class=\'box\'>\n' + \
     '            <legend>%s</legend>\n' + \
     '%s' + \
     '        </fieldset>\n'
-ENTRY_NARRATIVE = '                <p>%s</p>\n'
+
+INDENTATION = '    '
+SECOND_LEVEL_ENTRY = '<li><span>%s</span></li>\n'
+THIRD_LEVEL_ENTRY = '<ul>\n                            <li><span>%s</span></li>\n                        </ul>\n'
+ENTRY_BLOCK = '                        <ul>\n%s                        </ul>\n'
+TEXT_BOX_NARRAtIVE = '<p>%s</p>\n'
 ENTRY_CODE_START = '                <pre><code>'
-ENTRY_CODE_END = '%s</code></pre>\n'
-ENTRY_CODE_MIDDLE = '%s\n'
-ENTRY_CODE = ENTRY_CODE_START + '%s</code></pre>\n'
+ENTRY_CODE_END = '</code></pre>\n'
 
 
 def get_title(param):
@@ -80,123 +78,114 @@ def get_title(param):
     return {'value': '', 'is_narrative': False}
 
 
-def clean_line(param):
-    return cgi.escape(param.replace('\n', ''))
+def escape(line):
+    line = re.sub(r'([^\\]*)\*([a-zA-Z0-9<>;&-.]+)([^\\|$])\*', '\\1<strong>\\2\\3</strong>', cgi.escape(line.replace('\n', '')))
+    line = re.sub(r'^\*([a-zA-Z0-9<>;&-.]+)([^\\|$])\*', '<strong>\\2\\3</strong>', line)
+    return re.sub('\\\\\*', '*', line)
 
 
 def tabs_to_spaces(line):
     return line.replace('\t\t\t', '         ').replace('\t\t', '     ').replace('\t', ' ').replace('\n', '')
 
-def add_strong_tag(line):
-    strong_entities = re.findall('[^\\\\]\\*(.*?)\\*', line)
-    for strong_entity in strong_entities:
-        line = line.replace('*%s*' % strong_entity, '<strong>%s</strong>' % strong_entity)
-    return line
 
-def unescape(line):
-    return line.replace('\\*', '*')
+def build_indentation(next_level, is_narrative):
+    if next_level == 'second_level':
+        if is_narrative:
+            return INDENTATION * 4
+        else:
+            return INDENTATION * 5
+    elif next_level == 'third_level':
+        return INDENTATION * 6
 
 
-def get_narrative_body(param):
+def get_white_spacing(next_level):
+    if next_level == 'first_level':
+        return 0
+    elif next_level == 'second_level':
+        return 4
+    elif next_level == 'third_level':
+        return 8
+    else:
+        raise Exception("Could not find level " + next_level)
+
+
+def line_finishes_code_block(current_level, line):
+    return current_level == 'code' and line.endswith('*')
+
+
+def line_starts_code_block(current_level, line):
+    return line.startswith('*') and current_level != 'code' and not re.match('^\*[a-zA-Z0-9<>;&]+\*', line)
+
+
+def get_list_body(param, body_box, paragraph_box, is_narrative):
     iter_text = iter(param)
     next(iter_text)
 
-    sub_title = ''
+    current_level = 'start'
+    html = ''
+    title = None
     text = ''
-    body = ''
-    state = 'title'
     for line in iter_text:
-        c_line = tabs_to_spaces(line)
-        if state == 'code' and line == '\n':
-            text += '\n'
-        elif len(c_line) == 0 or c_line == '\n':
-            continue
-        elif c_line.startswith(TEXT_PREFIX):
-            code = re.match(TEXT_PREFIX + '\*(.*)\*', c_line)
-            if code:
-                text += ENTRY_CODE % clean_line(code.group(1))
-                state = 'text'
-            elif c_line.startswith(TEXT_PREFIX + "*"):
-                text += ENTRY_CODE_START + clean_line(c_line[len(TEXT_PREFIX + "*"):]) + '\n'
-                state = 'code'
-            else:
-                if state == 'code' and c_line.endswith('*'):
-                    text += ENTRY_CODE_END % clean_line(c_line[4:-1])
-                    state = 'text'
-                elif state == 'code' and not c_line.endswith('*'):
-                    text += ENTRY_CODE_MIDDLE % clean_line(c_line[4:])
+        try:
+            line = tabs_to_spaces(line)
+            if line == '':
+                continue
+
+            if current_level != 'code':
+                next_level = find_level(line)
+                line = line[get_white_spacing(next_level):]
+
+            if line_finishes_code_block(current_level, line):
+                text += line[:-1] + ENTRY_CODE_END
+            elif current_level == 'code':
+                text += escape(line) + '\n'
+            elif line_starts_code_block(current_level, line):
+                if line.endswith('*'):
+                    text += ENTRY_CODE_START + escape(line[1:-1]) + ENTRY_CODE_END
+                    current_level = next_level
                 else:
-                    text += ENTRY_NARRATIVE % unescape(add_strong_tag(clean_line(c_line[len(TEXT_PREFIX):])))
-                    state = 'text'
-
-        elif not c_line.startswith(' '):
-            state = 'title'
-            if sub_title != '':
-                body += BOX_NARRATIVE % (sub_title, text)
-                text = ''
-            sub_title = clean_line(c_line)
-    if sub_title == '' and body == '' and text == '':
-        return ''
-    return body + BOX_NARRATIVE % (sub_title, text)
-
-
-def get_list_body(param):
-    iter_text = iter(param)
-    next(iter_text)
-
-    sub_title = ''
-    text = ''
-    nested_text = ''
-    body = ''
-    state = 'title'
-    for line in iter_text:
-        line = tabs_to_spaces(line)
-        if len(line) == 0:
-            continue
-
-        if line.startswith(NESTED_TEXT_PREFIX) and state != 'code':
-            code = re.match(NESTED_TEXT_PREFIX + '\*(.*)\*', line)
-            if code:
-                text += ENTRY_CODE % clean_line(code.group(1))
+                    text += ENTRY_CODE_START + line[1:] + '\n'
+                    next_level = 'code'
+            elif next_level == 'first_level':
+                if current_level != 'start':
+                    html += body_box % (title, text)
+                    text = ''
+                title = escape(line)
+            elif next_level == 'second_level':
+                text += build_indentation(next_level, is_narrative) + paragraph_box % escape(line)
+            elif next_level == 'third_level':
+                text += build_indentation(next_level, is_narrative) + THIRD_LEVEL_ENTRY % escape(line)
             else:
-                state = 'nested'
-                nested_text += NESTED_ENTRY % clean_line(line[len(NESTED_TEXT_PREFIX):])
-        elif line.startswith(TEXT_PREFIX):
-            if state == 'nested':
-                text += flush_nested(nested_text)
-                nested_text = ''
-            code = re.match(TEXT_PREFIX + '\*(.*)\*', line)
-            if code:
-                text += ENTRY_CODE % clean_line(code.group(1))
-            elif line.startswith(TEXT_PREFIX + "*"):
-                text += ENTRY_CODE_START + clean_line(line[len(TEXT_PREFIX + "*"):]) + '\n'
-                state = 'code'
-            elif state == 'code' and line.endswith('*'):
-                text += ENTRY_CODE_END % clean_line(line[4:-1])
-                state = 'text'
-            elif state == 'code' and not line.endswith('*'):
-                text += ENTRY_CODE_MIDDLE % clean_line(line[4:])
-            else:
-                text += ENTRY_START % unescape(add_strong_tag(clean_line(line[len(TEXT_PREFIX):]))) + ENTRY_END
-                state = 'text'
-        elif not line.startswith(' '):
-            if state == 'nested':
-                text += flush_nested(nested_text)
-                nested_text = ''
-            state = 'title'
-            if sub_title != '':
-                body += BOX % (sub_title, text)
-                text = ''
-            sub_title = clean_line(line)
-    if sub_title == '' and body == '' and text == '':
-        return ''
-    if state == 'nested':
-        text += flush_nested(nested_text)
-    return body + BOX % (sub_title, text)
+                raise Exception('Unsupported state current level[%s] nextLevel[%s]' % (current_level, next_level))
+            if current_level != 'code':
+                current_level = next_level
+
+        except Exception as e:
+            raise Exception('%s in line [%s]' % (str(e), line))
+
+    if title is not None:
+        if text is '':
+            raise Exception('Failed to parse, found title[%s] with no text' % title)
+        return html + body_box % (title, text)
+    else:
+        return html
 
 
-def flush_nested(nested_text):
-    return ENTRY_BLOCK % nested_text
+def find_level(line):
+    spaces = 0
+    for c in line:
+        if c == ' ':
+            spaces += 1
+        else:
+            break
+    if spaces == 0:
+        return 'first_level'
+    elif spaces == 4:
+        return 'second_level'
+    elif spaces == 8:
+        return 'third_level'
+    else:
+        raise Exception("Unsupported number of spaces [%d]" % spaces)
 
 
 if __name__ == "__main__":
