@@ -136,7 +136,9 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
                 line = line[get_white_spacing(next_level):]
 
             if line_finishes_code_block(current_level, line):
-                text += line[:-1] + ENTRY_CODE_END
+                text += escape(line[:-1]) + ENTRY_CODE_END
+                current_level = 'nocode'
+                next_level = 'nocode'
             elif current_level == 'code':
                 text += escape(line) + '\n'
             elif line_starts_code_block(current_level, line):
@@ -144,7 +146,7 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
                     text += ENTRY_CODE_START + escape(line[1:-1]) + ENTRY_CODE_END
                     current_level = next_level
                 else:
-                    text += ENTRY_CODE_START + line[1:] + '\n'
+                    text += ENTRY_CODE_START + escape(line[1:]) + '\n'
                     next_level = 'code'
             elif next_level == 'first_level':
                 if current_level != 'start':

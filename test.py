@@ -1025,6 +1025,36 @@ class ParserTest(unittest.TestCase):
             '</html>'
         )
 
+    def test_whenNarrativeAndHasCodeBlockWithMultipleHtmlCharacters_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n' +
+            'bravo\n' +
+            '    *<>charlie\n' +
+            'delta<>\n' +
+            'echo<>*\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="stylesheet" href="/assets/vs.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <pre><code>&lt;&gt;charlie\n' +
+            'delta&lt;&gt;\n' +
+            'echo&lt;&gt;</code></pre>\n' +
+            '        </fieldset>\n' +
+            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
     def assert_markup_generated(self, input, expected):
         actual = parse(string.split(input, '\n'))
         a = actual.split("\n")
