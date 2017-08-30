@@ -656,7 +656,7 @@ class ParserTest(unittest.TestCase):
         self.assert_markup_generated(
             '*alpha*\n' +
             'bravo\n' +
-            '    charlie *<delta>* echo\n',
+            '    charlie *<$delta>* echo\n',
 
             '<!DOCTYPE html>\n'
             '<html>\n' +
@@ -672,7 +672,7 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>charlie <strong>&lt;delta&gt;</strong> echo</span></li>\n' +
+            '                    <li><span>charlie <strong>&lt;$delta&gt;</strong> echo</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
             '    <script>hljs.initHighlightingOnLoad();</script>\n' +
