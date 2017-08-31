@@ -79,8 +79,11 @@ def get_title(param):
 
 
 def escape(line):
-    line = re.sub(r'([^\\]*)\*([a-zA-Z0-9<>;&-./$]+)([^\\|$])\*', '\\1<strong>\\2\\3</strong>', cgi.escape(line.replace('\n', '')))
-    line = re.sub(r'^\*([a-zA-Z0-9<>;&-./$]+)([^\\|$])\*', '<strong>\\2\\3</strong>', line)
+    line = cgi.escape(line)
+    while re.search(r'([^\\]*)\*([a-zA-Z0-9<>;&-./$]+)([^\\|$])\*', line):
+        line = re.sub(r'([^\\]*)\*([a-zA-Z0-9<>;&-./$]+)([^\\|$])\*', '\\1<strong>\\2\\3</strong>', line.replace('\n', ''))
+    while re.search('^\*([a-zA-Z0-9<>;&-./$]+)([^\\|$])\*', line):
+        line = re.sub(r'^\*([a-zA-Z0-9<>;&-./$]+)([^\\|$])\*', '<strong>\\2\\3</strong>', line)
     return re.sub('\\\\\*', '*', line)
 
 
