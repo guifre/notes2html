@@ -37,7 +37,6 @@ BODY = '<!DOCTYPE html>\n' + \
        '        <title>%s</title>\n' + \
        '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' + \
        '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' \
-       '        <link rel="stylesheet" href="/assets/vs.css">\n' + \
        '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' + \
        '        <script src="/assets/codehighlighter.js"></script>\n' \
        '    </head>\n' + \
