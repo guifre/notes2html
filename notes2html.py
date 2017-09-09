@@ -39,11 +39,11 @@ BODY = '<!DOCTYPE html>\n' + \
        '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' \
        '        <link rel="stylesheet" href="/assets/vs.css">\n' + \
        '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' + \
-       '        <script src="/assets/highlight.pack.js"></script>\n' \
+       '        <script src="/assets/codehighlighter.js"></script>\n' \
        '    </head>\n' + \
        '    <body>\n' + \
        '%s' + \
-       '    <script>hljs.initHighlightingOnLoad();</script>\n' \
+       '    <script>new Highlighter().run(document);</script>\n' \
        '    </body>\n' + \
        '</html>'
 

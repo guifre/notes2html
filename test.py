@@ -21,10 +21,10 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -41,10 +41,10 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -61,10 +61,10 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -90,7 +90,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -99,7 +99,7 @@ class ParserTest(unittest.TestCase):
             '                    <li><span>text</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -119,7 +119,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -128,7 +128,7 @@ class ParserTest(unittest.TestCase):
             '                    <li><span>text</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -149,7 +149,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -159,7 +159,7 @@ class ParserTest(unittest.TestCase):
             '                    <li><span>second text line</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -179,7 +179,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -191,7 +191,7 @@ class ParserTest(unittest.TestCase):
             '                        </ul>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -216,7 +216,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -233,7 +233,7 @@ class ParserTest(unittest.TestCase):
             '                    <li><span>second text line of the second block</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -264,7 +264,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -299,7 +299,7 @@ class ParserTest(unittest.TestCase):
             '                    <li><span>mike</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -332,10 +332,10 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -361,14 +361,14 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -388,7 +388,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -396,7 +396,7 @@ class ParserTest(unittest.TestCase):
             '                <p>charlie</p>\n' +
             '                <p>delta</p>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -420,7 +420,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -433,7 +433,7 @@ class ParserTest(unittest.TestCase):
             '                <p>foxtrot</p>\n' +
             '                <p>golf</p>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -453,7 +453,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -461,7 +461,7 @@ class ParserTest(unittest.TestCase):
             '                <p>charlie</p>\n' +
             '                <p><strong>delta</strong> echo</p>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -483,7 +483,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -492,7 +492,7 @@ class ParserTest(unittest.TestCase):
             '                <pre><code>delta\n'
             '    echo</code></pre>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -514,7 +514,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -524,7 +524,7 @@ class ParserTest(unittest.TestCase):
             '                      echo\n'
             '    foxtrot</code></pre>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -543,14 +543,14 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie <strong>delta</strong> echo</p>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -570,7 +570,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -580,7 +580,7 @@ class ParserTest(unittest.TestCase):
             '                    <li><span><strong>delta</strong></span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -602,7 +602,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -613,7 +613,7 @@ class ParserTest(unittest.TestCase):
             'echo</code></pre>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -635,7 +635,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -647,7 +647,7 @@ class ParserTest(unittest.TestCase):
             '        foxtrot</code></pre>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -666,7 +666,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -675,7 +675,7 @@ class ParserTest(unittest.TestCase):
             '                    <li><span>charlie <strong>&lt;$delta&gt;</strong> echo</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -695,7 +695,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -705,7 +705,7 @@ class ParserTest(unittest.TestCase):
             '                <pre><code>delta echo</code></pre>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -726,7 +726,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -739,7 +739,7 @@ class ParserTest(unittest.TestCase):
             '                    <li><span><strong>echo</strong> foxtrot</span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -759,7 +759,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -769,7 +769,7 @@ class ParserTest(unittest.TestCase):
             '                <pre><code>delta echo* foxtrot</code></pre>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -811,7 +811,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -820,7 +820,7 @@ class ParserTest(unittest.TestCase):
             '                <pre><code>charlie delta</code></pre>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -841,7 +841,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -852,7 +852,7 @@ class ParserTest(unittest.TestCase):
             '                <pre><code>echo foxtrot</code></pre>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -873,7 +873,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -884,7 +884,7 @@ class ParserTest(unittest.TestCase):
             '                    <li><span><strong>echo</strong></span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -905,7 +905,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -918,7 +918,7 @@ class ParserTest(unittest.TestCase):
             '                        </ul>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -938,7 +938,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -948,7 +948,7 @@ class ParserTest(unittest.TestCase):
             '                    <li><span><strong>echo</strong></span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -972,7 +972,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -985,7 +985,7 @@ class ParserTest(unittest.TestCase):
             '                <p>foxtrot</p>\n' +
             '                <p>golf</p>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -1008,7 +1008,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -1020,7 +1020,7 @@ class ParserTest(unittest.TestCase):
             '                <p>foxtrot</p>\n' +
             '                <p>golf</p>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -1041,7 +1041,7 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -1050,7 +1050,7 @@ class ParserTest(unittest.TestCase):
             'delta&lt;&gt;\n' +
             'echo&lt;&gt;</code></pre>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -1069,14 +1069,14 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>foo <strong>/charlie/delta</strong> echo</p>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
@@ -1095,14 +1095,14 @@ class ParserTest(unittest.TestCase):
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="stylesheet" href="/assets/vs.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/highlight.pack.js"></script>\n' +
+            '        <script src="/assets/codehighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>foo <strong>$charlie</strong> <strong>$delta</strong> echo</p>\n' +
             '        </fieldset>\n' +
-            '    <script>hljs.initHighlightingOnLoad();</script>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
             '    </body>\n' +
             '</html>'
         )
