@@ -130,7 +130,7 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
     for line in iter_text:
         try:
             line = tabs_to_spaces(line)
-            if line == '' and current_level != 'code':
+            if line == ''and current_level != 'code' or line == '\n' :
                 continue
 
             if current_level != 'code':
@@ -167,7 +167,7 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
         except Exception as e:
             raise Exception('%s in line [%s]' % (str(e), line))
 
-    if title is not None:
+    if title is not None and title is not '\r\n':
         if text is '':
             raise Exception('Failed to parse, found title[%s] with no text' % title)
         return html + body_box % (title, text)
