@@ -87,7 +87,7 @@ def escape(line):
 
 
 def tabs_to_spaces(line):
-    return line.replace('\t\t\t', '         ').replace('\t\t', '     ').replace('\t', ' ')
+    return line.replace('\t\t\t', '         ').replace('\t\t', '     ').replace('\t', ' ').replace('\r', ' ')
 
 
 def build_indentation(next_level, is_narrative):
@@ -112,7 +112,7 @@ def get_white_spacing(next_level):
 
 
 def line_finishes_code_block(current_level, line):
-    return current_level == 'code' and line.endswith('*')
+    return current_level == 'code' and line.rstrip('\n').endswith('*')
 
 
 def line_starts_code_block(current_level, line):
