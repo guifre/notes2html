@@ -83,11 +83,11 @@ def escape(line):
         line = re.sub(r'([^\\]*)\*([a-zA-Z0-9<>;&-./$]+)([^\\|$])\*', '\\1<strong>\\2\\3</strong>', line.replace('\n', ''))
     while re.search('^\*([a-zA-Z0-9<>;&-./$]+)([^\\|$])\*', line):
         line = re.sub(r'^\*([a-zA-Z0-9<>;&-./$]+)([^\\|$])\*', '<strong>\\2\\3</strong>', line)
-    return re.sub('\\\\\*', '*', line.rstrip('\n'))
+    return re.sub('\\\\\*', '*', line)
 
 
 def tabs_to_spaces(line):
-    return line.replace('\t\t\t', '         ').replace('\t\t', '     ').replace('\t', ' ').replace('\r', ' ')
+    return line.replace('\t\t\t', '         ').replace('\t\t', '     ').replace('\t', ' ').replace('\n', '')
 
 
 def build_indentation(next_level, is_narrative):
@@ -112,7 +112,7 @@ def get_white_spacing(next_level):
 
 
 def line_finishes_code_block(current_level, line):
-    return current_level == 'code' and line.rstrip('\n').endswith('*')
+    return current_level == 'code' and line.endswith('*')
 
 
 def line_starts_code_block(current_level, line):
@@ -130,7 +130,7 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
     for line in iter_text:
         try:
             line = tabs_to_spaces(line)
-            if line == ''and current_level != 'code' or line == '\n' :
+            if line == '' and current_level != 'code':
                 continue
 
             if current_level != 'code':
@@ -167,7 +167,7 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
         except Exception as e:
             raise Exception('%s in line [%s]' % (str(e), line))
 
-    if title is not None and title is not '\r\n':
+    if title is not None:
         if text is '':
             raise Exception('Failed to parse, found title[%s] with no text' % title)
         return html + body_box % (title, text)
