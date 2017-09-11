@@ -38,7 +38,7 @@ BODY = '<!DOCTYPE html>\n' + \
        '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' + \
        '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' \
        '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' + \
-       '        <script src="/assets/codehighlighter.js"></script>\n' \
+       '        <script src="/assets/syntaxhighlighter.js"></script>\n' \
        '    </head>\n' + \
        '    <body>\n' + \
        '%s' + \
@@ -87,7 +87,7 @@ def escape(line):
 
 
 def tabs_to_spaces(line):
-    return line.replace('\t\t\t', '         ').replace('\t\t', '     ').replace('\t', ' ').replace('\n', '')
+    return line.replace('\t\t\t', '         ').replace('\t\t', '     ').replace('\t', ' ')
 
 
 def build_indentation(next_level, is_narrative):
@@ -130,7 +130,7 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
     for line in iter_text:
         try:
             line = tabs_to_spaces(line)
-            if line == '':
+            if line == '' and current_level != 'code':
                 continue
 
             if current_level != 'code':

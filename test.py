@@ -20,7 +20,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '    <script>new Highlighter().run(document);</script>\n' +
@@ -39,7 +39,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '    <script>new Highlighter().run(document);</script>\n' +
@@ -58,7 +58,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '    <script>new Highlighter().run(document);</script>\n' +
@@ -86,7 +86,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -114,7 +114,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -143,7 +143,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -172,7 +172,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -208,7 +208,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -255,7 +255,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -322,7 +322,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '    <script>new Highlighter().run(document);</script>\n' +
@@ -350,7 +350,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -376,7 +376,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -407,7 +407,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -439,7 +439,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -468,13 +468,14 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
             '                <pre><code>delta\n'
+            '\n' +
             '    echo</code></pre>\n' +
             '        </fieldset>\n' +
             '    <script>new Highlighter().run(document);</script>\n' +
@@ -498,7 +499,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -526,7 +527,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -552,7 +553,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -583,7 +584,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -591,6 +592,7 @@ class ParserTest(unittest.TestCase):
             '                <ul>\n' +
             '                    <li><span>charlie</span></li>\n' +
             '                <pre><code>delta\n'
+            '\n' +
             'echo</code></pre>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
@@ -615,7 +617,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -645,7 +647,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -673,7 +675,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -703,7 +705,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -735,7 +737,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -786,7 +788,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -815,7 +817,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -846,7 +848,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -877,7 +879,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -909,7 +911,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -942,7 +944,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -977,7 +979,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -1009,7 +1011,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -1036,7 +1038,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -1061,7 +1063,7 @@ class ParserTest(unittest.TestCase):
             '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
             '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
             '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/codehighlighter.js"></script>\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
@@ -1073,12 +1075,41 @@ class ParserTest(unittest.TestCase):
             '</html>'
         )
 
+    def test_whenNarrativeAndHasCodeBlocksWithEmptyBlankLines_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n' +
+            'bravo\n' +
+            '    *charlie\n'
+            '\n'
+            'delta*\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <pre><code>charlie\n' +
+            '\n' +
+            'delta</code></pre>\n' +
+            '        </fieldset>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
     def assert_markup_generated(self, input, expected):
         actual = parse(string.split(input, '\n'))
         a = actual.split("\n")
         e = expected.split("\n")
         for i in range(0, len(a)):
-            self.assertEqual(a[i], e[i], actual + '\n' + expected + '\n' + a[i] +'\n' + e[i])
+            self.assertEqual(a[i], e[i], '[' + actual + ']' + '\n[' + expected + ']\nactual[' + a[i] +']\nexpected[' + e[i] +']')
         self.assertEqual(expected, actual)
 
     def assert_exception_thrown(self, input, message):
