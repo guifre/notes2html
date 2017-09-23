@@ -68,6 +68,13 @@ TEXT_BOX_NARRAtIVE = '<p>%s</p>\n'
 ENTRY_CODE_START = '                <pre><code>'
 ENTRY_CODE_END = '</code></pre>\n'
 
+IMG_EXTENSIONS = [
+    '.jpeg',
+    '.jpg',
+    '.png',
+    '.gif',
+]
+IMG_LINK = '/assets/%s'
 
 def get_title(param):
     if len(param) == 0:
@@ -120,6 +127,22 @@ def line_starts_code_block(current_level, line):
     return line.startswith('*') and current_level != 'code' and not re.match('^\*[a-zA-Z0-9<>;&]+\*', line)
 
 
+def is_image(line):
+    if line.startswith("#") and line.endswith("#"):
+        image = line[1:-1]
+        return any(image.endswith(extension) for extension in IMG_EXTENSIONS)
+    return False
+
+
+def build_image(line):
+    if line.startswith("#") and line.endswith("#"):
+        image = line[1:-1]
+        if any(image.endswith(extension) for extension in IMG_EXTENSIONS):
+            link = IMG_LINK % image
+            return "<a href='{1}'><img class='imgbody' src='{1}'></a>".format(link, link)
+    return False
+
+
 def get_list_body(param, body_box, paragraph_box, is_narrative):
     iter_text = iter(param)
     next(iter_text)
@@ -138,7 +161,9 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
                 next_level = find_level(line)
                 line = line[get_white_spacing(next_level):]
 
-            if line_finishes_code_block(current_level, line):
+            if is_image(line):
+                text += build_indentation(next_level, is_narrative) + build_image(line) + '\n'
+            elif line_finishes_code_block(current_level, line):
                 text += escape(line[:-1]) + ENTRY_CODE_END
                 current_level = 'nocode'
                 next_level = 'nocode'

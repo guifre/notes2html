@@ -5,3 +5,11 @@ I write notes of random topics and I wanted to keep them online for easy access.
 text2html transforms my notes to basic HTML. The workflow is just writing and pushing a note. After this, a git hook triggers a text2html job that builds the notes and synchronizes it to http://guif.re
 
 To run unit tests: $ coverage run -m unittest discover; coverage html
+
+### Syntax
+*Document title*
+Title one
+    paragraph one *bold*
+    *start of code
+    end of code*
+    #image#
