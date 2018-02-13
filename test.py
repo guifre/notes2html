@@ -443,7 +443,7 @@ class ParserTest(unittest.TestCase):
             '*alpha*narrative\n' +
             'bravo\n' +
             '    charlie\n' +
-            '    *delta* echo\n',
+            '    **delta** echo\n',
 
             '<!DOCTYPE html>\n' +
             '<html>\n' +
@@ -534,7 +534,7 @@ class ParserTest(unittest.TestCase):
         self.assert_markup_generated(
             '*alpha*narrative\n' +
             'bravo\n' +
-            '    charlie *delta* echo\n',
+            '    charlie **delta** echo\n',
 
             '<!DOCTYPE html>\n' +
             '<html>\n' +
@@ -561,7 +561,7 @@ class ParserTest(unittest.TestCase):
             '*alpha*\n' +
             'bravo\n' +
             '    charlie\n' +
-            '    *delta*\n',
+            '    **delta**\n',
 
             '<!DOCTYPE html>\n' +
             '<html>\n' +
@@ -658,7 +658,7 @@ class ParserTest(unittest.TestCase):
         self.assert_markup_generated(
             '*alpha*\n' +
             'bravo\n' +
-            '    charlie *<$delta>* echo\n',
+            '    charlie **<$delta>** echo\n',
 
             '<!DOCTYPE html>\n'
             '<html>\n' +
@@ -718,7 +718,7 @@ class ParserTest(unittest.TestCase):
             'bravo\n' +
             '    charlie\n'+
             '        delta\n' +
-            '    *echo* foxtrot\n',
+            '    **echo** foxtrot\n',
 
             '<!DOCTYPE html>\n'
             '<html>\n' +
@@ -831,7 +831,7 @@ class ParserTest(unittest.TestCase):
         self.assert_markup_generated(
             '*alpha*\n' +
             'bravo\n' +
-            '    *charlie*\n' +
+            '    **charlie**\n' +
             '    delta\n' +
             '    *echo foxtrot*\n',
 
@@ -863,9 +863,9 @@ class ParserTest(unittest.TestCase):
         self.assert_markup_generated(
             '*alpha*\n' +
             'bravo\n' +
-            '    \\*charlie\\*\n' +
+            '    \\*\\*charlie\\*\\*\n' +
             '    delta\n' +
-            '    *echo*\n',
+            '    **echo**\n',
 
             '<!DOCTYPE html>\n'
             '<html>\n' +
@@ -880,7 +880,7 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>*charlie*</span></li>\n' +
+            '                    <li><span>**charlie**</span></li>\n' +
             '                    <li><span>delta</span></li>\n' +
             '                    <li><span><strong>echo</strong></span></li>\n' +
             '                </ul>\n' +
@@ -895,7 +895,7 @@ class ParserTest(unittest.TestCase):
         self.assert_markup_generated(
             '*alpha*\n' +
             'bravo\n' +
-            '    \\*charlie\\*\n' +
+            '    \\*\\*charlie\\*\\*\n' +
             '    delta\n' +
             '        echo\n',
 
@@ -912,7 +912,7 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>*charlie*</span></li>\n' +
+            '                    <li><span>**charlie**</span></li>\n' +
             '                    <li><span>delta</span></li>\n' +
             '                        <ul>\n'
             '                            <li><span>echo</span></li>\n' +
@@ -929,8 +929,8 @@ class ParserTest(unittest.TestCase):
         self.assert_markup_generated(
             '*alpha*\n' +
             'bravo\n' +
-            '    \\*charlie\\* delta\n' +
-            '    *echo*\n',
+            '    \\*\\*charlie\\*\\* delta\n' +
+            '    **echo**\n',
 
             '<!DOCTYPE html>\n'
             '<html>\n' +
@@ -945,7 +945,7 @@ class ParserTest(unittest.TestCase):
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
-            '                    <li><span>*charlie* delta</span></li>\n' +
+            '                    <li><span>**charlie** delta</span></li>\n' +
             '                    <li><span><strong>echo</strong></span></li>\n' +
             '                </ul>\n' +
             '        </fieldset>\n' +
@@ -996,7 +996,7 @@ class ParserTest(unittest.TestCase):
         self.assert_markup_generated(
             '*alpha*narrative\n' +
             'bravo\n' +
-            '    charlie \\*delta\\*\n' +
+            '    charlie \\*\\*delta\\*\\*\n' +
             '\n\n'
             'echo\n' +
             '    foxtrot\n' +
@@ -1014,7 +1014,7 @@ class ParserTest(unittest.TestCase):
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
             '            <legend>bravo</legend>\n' +
-            '                <p>charlie *delta*</p>\n' +
+            '                <p>charlie **delta**</p>\n' +
             '        </fieldset>\n' +
             '        <fieldset class=\'box\'>\n' +
             '            <legend>echo</legend>\n' +
@@ -1061,7 +1061,7 @@ class ParserTest(unittest.TestCase):
         self.assert_markup_generated(
             '*alpha*narrative\n' +
             'bravo\n' +
-            '    foo */charlie/delta* echo\n',
+            '    foo **/charlie/delta** echo\n',
 
             '<!DOCTYPE html>\n' +
             '<html>\n' +
@@ -1087,7 +1087,7 @@ class ParserTest(unittest.TestCase):
         self.assert_markup_generated(
             '*alpha*narrative\n' +
             'bravo\n' +
-            '    foo *$charlie* *$delta* echo\n',
+            '    foo **$charlie** **$delta** echo\n',
 
             '<!DOCTYPE html>\n' +
             '<html>\n' +
@@ -1139,6 +1139,32 @@ class ParserTest(unittest.TestCase):
             '</html>'
         )
 
+    def test_whenNarrativeAndHasInlineCodeBlocksWithEmptyBlankLines_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*alpha*narrative\n' +
+            'bravo\n' +
+            '    charlie **delta echo** foxtrot\n',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>alpha</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>bravo</legend>\n' +
+            '                <p>charlie <strong>delta echo</strong> foxtrot</p>\n' +
+            '        </fieldset>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
+            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
     def test_whenNarrativeWithImage_thenExpectedMarkupBuilt(self):
         self.assert_markup_generated(
             '*alpha*narrative\n' +
@@ -1169,7 +1195,7 @@ class ParserTest(unittest.TestCase):
         self.assert_markup_generated(
             '*alpha*narrative\n' +
             'bravo\n' +
-            '    charlie *http://127.0.0.1/wolfcms/?/admin/login*\n',
+            '    charlie **http://127.0.0.1/wolfcms/?/admin/login**\n',
 
             '<!DOCTYPE html>\n' +
             '<html>\n' +
@@ -1196,7 +1222,7 @@ class ParserTest(unittest.TestCase):
         a = actual.split("\n")
         e = expected.split("\n")
         for i in range(0, len(a)):
-            self.assertEqual(a[i], e[i], '[' + actual + ']' + '\n[' + expected + ']\nactual[' + a[i] +']\nexpected[' + e[i] +']')
+            self.assertEqual(e[i], a[i], '[' + actual + ']' + '\n[' + expected + ']\nactual[' + a[i] +']\nexpected[' + e[i] +']')
         self.assertEqual(expected, actual)
 
     def assert_exception_thrown(self, input, message):

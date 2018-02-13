@@ -87,11 +87,10 @@ def get_title(param):
 
 def escape(line):
     line = cgi.escape(line)
-    while re.search(r'([^\\]*)\*([a-zA-Z0-9<>;&-./$?:]+)([^\\|$])\*', line):
-        line = re.sub(r'([^\\]*)\*([a-zA-Z0-9<>;&-./$?:]+)([^\\|$])\*', '\\1<strong>\\2\\3</strong>', line.replace('\n', ''))
-    while re.search('^\*([a-zA-Z0-9<>;&-./$?:]+)([^\\|$])\*', line):
-        line = re.sub(r'^\*([a-zA-Z0-9<>;&-./$?:]+)([^\\|$])\*', '<strong>\\2\\3</strong>', line)
-    return re.sub('\\\\\*', '*', line)
+    while re.search(r'\*\*(.*?)\*\*', line):
+        line = re.sub(r'\*\*(.*?)\*\*', '<strong>\\1</strong>', line.replace('\n', ''))
+    line = re.sub(r'\\\*', '*', line.replace('\n', ''))
+    return line
 
 
 def tabs_to_spaces(line):
@@ -124,7 +123,7 @@ def line_finishes_code_block(current_level, line):
 
 
 def line_starts_code_block(current_level, line):
-    return line.startswith('*') and current_level != 'code' and not re.match('^\*[a-zA-Z0-9<>;&]+\*', line)
+    return line.startswith('*') and not line.startswith('**') and current_level != 'code' and not re.match('^\*[a-zA-Z0-9<>;&]+\*', line)
 
 
 def is_image(line):
