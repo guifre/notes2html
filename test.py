@@ -23,6 +23,11 @@ class ParserTest(unittest.TestCase):
             '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
             '    <script>new Highlighter().run(document);</script>\n' +
             '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
             '    </body>\n' +
@@ -43,6 +48,11 @@ class ParserTest(unittest.TestCase):
             '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
             '    <script>new Highlighter().run(document);</script>\n' +
             '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
             '    </body>\n' +
@@ -63,6 +73,11 @@ class ParserTest(unittest.TestCase):
             '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
             '    <script>new Highlighter().run(document);</script>\n' +
             '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
             '    </body>\n' +
@@ -93,6 +108,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#subtitle\'>subtitle</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'subtitle\'></a>\n' +
             '            <legend>subtitle</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>text</span></li>\n' +
@@ -122,6 +144,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#subtitle\'>subtitle</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'subtitle\'></a>\n' +
             '            <legend>subtitle</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>text</span></li>\n' +
@@ -152,6 +181,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#subtitle\'>subtitle</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'subtitle\'></a>\n' +
             '            <legend>subtitle</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>first text line</span></li>\n' +
@@ -182,6 +218,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#subtitle\'>subtitle</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'subtitle\'></a>\n' +
             '            <legend>subtitle</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>text</span></li>\n' +
@@ -219,6 +262,14 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#first subtitle\'>first subtitle</a></span></li>\n' +
+            '                    <li><span><a href=\'#second subtitle\'>second subtitle</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'first subtitle\'></a>\n' +
             '            <legend>first subtitle</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>first text line</span></li>\n' +
@@ -226,6 +277,7 @@ class ParserTest(unittest.TestCase):
             '                </ul>\n' +
             '        </fieldset>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'second subtitle\'></a>\n' +
             '            <legend>second subtitle</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>first text line of the second block</span></li>\n' +
@@ -267,6 +319,15 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                    <li><span><a href=\'#foxtrot\'>foxtrot</a></span></li>\n' +
+            '                    <li><span><a href=\'#kilo\'>kilo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>charlie</span></li>\n' +
@@ -277,6 +338,7 @@ class ParserTest(unittest.TestCase):
             '                </ul>\n' +
             '        </fieldset>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'foxtrot\'></a>\n' +
             '            <legend>foxtrot</legend>\n' +
             '                <ul>\n' +
             '                        <ul>\n' +
@@ -290,6 +352,7 @@ class ParserTest(unittest.TestCase):
             '                </ul>\n' +
             '        </fieldset>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'kilo\'></a>\n' +
             '            <legend>kilo</legend>\n' +
             '                <ul>\n' +
             '                        <ul>\n' +
@@ -334,6 +397,11 @@ class ParserTest(unittest.TestCase):
             '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
             '    </head>\n' +
             '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
             '    <script>new Highlighter().run(document);</script>\n' +
             '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
             '    </body>\n' +
@@ -364,6 +432,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
             '        </fieldset>\n' +
@@ -391,6 +466,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
             '                <p>delta</p>\n' +
@@ -423,11 +505,20 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                    <li><span><a href=\'#echo\'>echo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
             '                <p>delta</p>\n' +
             '        </fieldset>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'echo\'></a>\n' +
             '            <legend>echo</legend>\n' +
             '                <p>foxtrot</p>\n' +
             '                <p>golf</p>\n' +
@@ -456,6 +547,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
             '                <p><strong>delta</strong> echo</p>\n' +
@@ -486,6 +584,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
             '                <pre><code>delta\n'
@@ -518,6 +623,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
             '                <pre><code>delta\n'
@@ -547,6 +659,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie <strong>delta</strong> echo</p>\n' +
             '        </fieldset>\n' +
@@ -574,6 +693,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>charlie</span></li>\n' +
@@ -606,6 +732,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>charlie</span></li>\n' +
@@ -640,6 +773,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>charlie</span></li>\n' +
@@ -671,6 +811,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>charlie <strong>&lt;$delta&gt;</strong> echo</span></li>\n' +
@@ -700,6 +847,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>charlie</span></li>\n' +
@@ -731,6 +885,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>charlie</span></li>\n' +
@@ -764,6 +925,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>charlie</span></li>\n' +
@@ -816,6 +984,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                <pre><code>charlie delta</code></pre>\n' +
@@ -846,6 +1021,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span><strong>charlie</strong></span></li>\n' +
@@ -878,6 +1060,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>**charlie**</span></li>\n' +
@@ -910,6 +1099,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>**charlie**</span></li>\n' +
@@ -943,6 +1139,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <ul>\n' +
             '                    <li><span>**charlie** delta</span></li>\n' +
@@ -977,11 +1180,20 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                    <li><span><a href=\'#echo\'>echo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie</p>\n' +
             '                <p>*delta*</p>\n' +
             '        </fieldset>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'echo\'></a>\n' +
             '            <legend>echo</legend>\n' +
             '                <p>foxtrot</p>\n' +
             '                <p>golf</p>\n' +
@@ -1013,10 +1225,19 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                    <li><span><a href=\'#echo\'>echo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie **delta**</p>\n' +
             '        </fieldset>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'echo\'></a>\n' +
             '            <legend>echo</legend>\n' +
             '                <p>foxtrot</p>\n' +
             '                <p>golf</p>\n' +
@@ -1046,6 +1267,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <pre><code>&lt;&gt;charlie\n' +
             'delta&lt;&gt;\n' +
@@ -1074,6 +1302,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>foo <strong>/charlie/delta</strong> echo</p>\n' +
             '        </fieldset>\n' +
@@ -1100,6 +1335,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>foo <strong>$charlie</strong> <strong>$delta</strong> echo</p>\n' +
             '        </fieldset>\n' +
@@ -1128,6 +1370,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <pre><code>charlie\n' +
             '\n' +
@@ -1156,6 +1405,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie <strong>delta echo</strong> foxtrot</p>\n' +
             '        </fieldset>\n' +
@@ -1182,6 +1438,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <a href=\'/assets/charlie.png\'><img class=\'imgbody\' src=\'/assets/charlie.png\'></a>\n' +
             '        </fieldset>\n' +
@@ -1208,6 +1471,13 @@ class ParserTest(unittest.TestCase):
             '    </head>\n' +
             '    <body>\n' +
             '        <fieldset class=\'box\'>\n' +
+            '            <legend>ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'bravo\'></a>\n' +
             '            <legend>bravo</legend>\n' +
             '                <p>charlie <strong>http://127.0.0.1/wolfcms/?/admin/login</strong></p>\n' +
             '        </fieldset>\n' +

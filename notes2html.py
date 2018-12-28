@@ -24,11 +24,11 @@ def run():
 def parse(param):
     title = get_title(param)
     if title['is_narrative']:
-        body = get_list_body(param, BOX_NARRATIVE, TEXT_BOX_NARRAtIVE, True)
+        body, toc = get_list_body(param, BOX_NARRATIVE, TEXT_BOX_NARRAtIVE, True)
     else:
-        body = get_list_body(param, BOX, SECOND_LEVEL_ENTRY, False)
+        body, toc = get_list_body(param, BOX, SECOND_LEVEL_ENTRY, False)
 
-    return BODY % (title['value'], body)
+    return BODY % (title['value'], toc, body)
 
 
 BODY = '<!DOCTYPE html>\n' + \
@@ -41,6 +41,12 @@ BODY = '<!DOCTYPE html>\n' + \
        '        <script src="/assets/syntaxhighlighter.js"></script>\n' \
        '    </head>\n' + \
        '    <body>\n' + \
+       '        <fieldset class=\'box\'>\n' + \
+       '            <legend>ToC</legend>\n' + \
+       '                <ul>\n' + \
+       '%s' + \
+       '                </ul>\n' + \
+       '        </fieldset>\n' + \
        '%s' + \
        '    <script>new Highlighter().run(document);</script>\n' \
        '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' + \
@@ -48,6 +54,7 @@ BODY = '<!DOCTYPE html>\n' + \
        '</html>'
 
 BOX = '        <fieldset class=\'box\'>\n' + \
+      '            <a name=\'%s\'></a>\n' + \
       '            <legend>%s</legend>\n' + \
       '                <ul>\n' \
       '%s' + \
@@ -56,6 +63,7 @@ BOX = '        <fieldset class=\'box\'>\n' + \
 
 BOX_NARRATIVE = \
     '        <fieldset class=\'box\'>\n' + \
+    '            <a name=\'%s\'></a>\n' + \
     '            <legend>%s</legend>\n' + \
     '%s' + \
     '        </fieldset>\n'
@@ -144,6 +152,7 @@ def build_image(line):
 
 def get_list_body(param, body_box, paragraph_box, is_narrative):
     iter_text = iter(param)
+    toc = ''
     next(iter_text)
 
     current_level = 'start'
@@ -177,7 +186,8 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
                     next_level = 'code'
             elif next_level == 'first_level':
                 if current_level != 'start':
-                    html += body_box % (title, text)
+                    html += body_box % (title, title, text)
+                    toc += '                    <li><span><a href=\'#%s\'>%s</a></span></li>\n' % (title, title)
                     text = ''
                 title = escape(line)
             elif next_level == 'second_level':
@@ -195,9 +205,10 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
     if title is not None:
         if text is '':
             raise Exception('Failed to parse, found title[%s] with no text' % title)
-        return html + body_box % (title, text)
+        toc += '                    <li><span><a href=\'#%s\'>%s</a></span></li>\n' % (title, title)
+        return html + body_box % (title, title, text), toc
     else:
-        return html
+        return html, toc
 
 
 def find_level(line):
