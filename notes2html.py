@@ -28,7 +28,7 @@ def parse(param):
     else:
         body, toc = get_list_body(param, BOX, SECOND_LEVEL_ENTRY, False)
 
-    return BODY % (title['value'], toc, body)
+    return BODY % (title['value'], title['value'], toc, body)
 
 
 BODY = '<!DOCTYPE html>\n' + \
@@ -42,7 +42,7 @@ BODY = '<!DOCTYPE html>\n' + \
        '    </head>\n' + \
        '    <body>\n' + \
        '        <fieldset class=\'box\'>\n' + \
-       '            <legend>ToC</legend>\n' + \
+       '            <legend>%s ToC</legend>\n' + \
        '                <ul>\n' + \
        '%s' + \
        '                </ul>\n' + \
