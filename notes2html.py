@@ -101,6 +101,12 @@ def escape(line):
     return line
 
 
+def escape_single_quoted_attr_value(text):
+    if text is None:
+        return text
+    return text.replace('\\', '\\\\').replace('\'', '&#x27;').replace('"', '&#x22;')
+
+
 def tabs_to_spaces(line):
     return line.replace('\t\t\t', '         ').replace('\t\t', '     ').replace('\t', ' ').replace('\n', '')
 
@@ -186,8 +192,8 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
                     next_level = 'code'
             elif next_level == 'first_level':
                 if current_level != 'start':
-                    html += body_box % (title, title, text)
-                    toc += '                    <li><span><a href=\'#%s\'>%s</a></span></li>\n' % (title, title)
+                    html += body_box % (escape_single_quoted_attr_value(title), title, text)
+                    toc += '                    <li><span><a href=\'#%s\'>%s</a></span></li>\n' % (escape_single_quoted_attr_value(title), title)
                     text = ''
                 title = escape(line)
             elif next_level == 'second_level':
@@ -205,8 +211,8 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
     if title is not None:
         if text is '':
             raise Exception('Failed to parse, found title[%s] with no text' % title)
-        toc += '                    <li><span><a href=\'#%s\'>%s</a></span></li>\n' % (title, title)
-        return html + body_box % (title, title, text), toc
+        toc += '                    <li><span><a href=\'#%s\'>%s</a></span></li>\n' % (escape_single_quoted_attr_value(title), title)
+        return html + body_box % (escape_single_quoted_attr_value(title), title, text), toc
     else:
         return html, toc
 

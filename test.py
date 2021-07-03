@@ -126,6 +126,41 @@ class ParserTest(unittest.TestCase):
             '</html>'
         )
 
+    def test_whenTextHasTitleAndSubtitleWithSpecialCharsAndText_thenExpectedMarkupBuilt(self):
+        self.assert_markup_generated(
+            '*title*\n' +
+            'subtitle\'\\foo\n' +
+            '    text',
+
+            '<!DOCTYPE html>\n' +
+            '<html>\n' +
+            '    <head>\n' +
+            '        <title>title</title>\n' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
+            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
+            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
+            '    </head>\n' +
+            '    <body>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <legend>title ToC</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span><a href=\'#subtitle&#x27;\\\\foo\'>subtitle\'\\foo</a></span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '        <fieldset class=\'box\'>\n' +
+            '            <a name=\'subtitle&#x27;\\\\foo\'></a>\n' +
+            '            <legend>subtitle\'\\foo</legend>\n' +
+            '                <ul>\n' +
+            '                    <li><span>text</span></li>\n' +
+            '                </ul>\n' +
+            '        </fieldset>\n' +
+            '    <script>new Highlighter().run(document);</script>\n' +
+            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
+            '    </body>\n' +
+            '</html>'
+        )
+
     def test_whenTextHasTitleAndSubtitleAndTextAndBlankLine_thenExpectedMarkupBuilt(self):
         self.assert_markup_generated(
             '*title*\n' +
