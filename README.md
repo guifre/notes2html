@@ -1,4 +1,4 @@
-# notes2html [![CI](https://github.com/guifre/notes2html/actions/workflows/ci.yml/badge.svg)](https://github.com/guifre/notes2html/actions/workflows/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/guifre/notes2html/badge.svg?branch=master)](https://coveralls.io/github/guifre/notes2html?branch=master)
+# notes2html [![CI](https://github.com/guifre/notes2html/actions/workflows/ci.yml/badge.svg)](https://github.com/guifre/notes2html/actions/workflows/ci.yml)
 
 I write notes of random topics and I wanted to keep them online for easy access. However, I hate writing HTML.
 
@@ -39,7 +39,7 @@ python3 -m ruff format .
 
 ## CI
 
-GitHub Actions runs the unit test suite on Python 3.10, 3.11, 3.12, and 3.13. The CI workflow runs tests with `coverage` and uploads the Python 3.13 coverage report to Coveralls.
+GitHub Actions runs Ruff, syntax-warning checks, and the unit test suite on Python 3.10, 3.11, 3.12, and 3.13.
 
 ### Syntax
 
