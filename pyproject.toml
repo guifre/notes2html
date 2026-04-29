@@ -1,0 +1,31 @@
+[project]
+name = "notes2html"
+version = "0.1.0"
+requires-python = ">=3.10"
+
+[project.optional-dependencies]
+dev = [
+    "coverage",
+    "ruff",
+    "tox",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py
+
+[testenv]
+skip_install = true
+commands = python -m unittest discover
+"""

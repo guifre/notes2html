@@ -1,405 +1,831 @@
 import re
 import tempfile
+import textwrap
 import unittest
 from pathlib import Path
 
 import notes2html
-
 from notes2html import parse, run
+
+
+def note(text):
+    return textwrap.dedent(text).lstrip('\n').rstrip('\n')
 
 
 class ParserTest(unittest.TestCase):
     def test_whenEmptyString_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
+        self.assert_markup_contains(
             '',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title></title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend> ToC</legend>\n' +
-            '                <ul>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
+            [
+                '<title></title>',
+                '<legend> ToC</legend>',
+            ],
         )
 
     def test_whenTextHasTitle_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
+        self.assert_markup_contains(
             '*title*',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>title</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>title ToC</legend>\n' +
-            '                <ul>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
+            [
+                '<title>title</title>',
+                '<legend>title ToC</legend>',
+            ],
         )
 
     def test_whenTextHasEmptyTitle_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
+        self.assert_markup_contains(
             '**',
+            [
+                '<title></title>',
+                '<legend> ToC</legend>',
+            ],
+        )
 
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title></title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend> ToC</legend>\n' +
-            '                <ul>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
+    def test_whenTextHasTitleAndSubtitleAndText_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *title*
+                subtitle
+                    text
+            """),
+            [
+                '<title>title</title>',
+                '<legend>title ToC</legend>',
+                "<li><span><a href='#subtitle'>subtitle</a></span></li>",
+                "<a name='subtitle'></a>",
+                '<legend>subtitle</legend>',
+                '<li><span>text</span></li>',
+            ],
+        )
+
+    def test_whenTextHasTitleAndSubtitleWithSpecialCharsAndText_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *title*
+                subtitle'\foo
+                    text
+            """),
+            [
+                '<title>title</title>',
+                '<legend>title ToC</legend>',
+                "<li><span><a href='#subtitle&#x27;\\\\foo'>subtitle'\\foo</a></span></li>",
+                "<a name='subtitle&#x27;\\\\foo'></a>",
+                "<legend>subtitle'\\foo</legend>",
+                '<li><span>text</span></li>',
+            ],
+        )
+
+    def test_whenTextHasTitleAndSubtitleAndTextAndBlankLine_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *title*
+
+                subtitle
+                    text
+            """),
+            [
+                '<title>title</title>',
+                '<legend>title ToC</legend>',
+                "<li><span><a href='#subtitle'>subtitle</a></span></li>",
+                "<a name='subtitle'></a>",
+                '<legend>subtitle</legend>',
+                '<li><span>text</span></li>',
+            ],
+        )
+
+    def test_whenTextHasTitleAndSubtitleAndTextAndMultipleLines_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *title*
+
+                subtitle
+                    first text line
+                    second text line
+            """),
+            [
+                '<title>title</title>',
+                '<legend>title ToC</legend>',
+                "<li><span><a href='#subtitle'>subtitle</a></span></li>",
+                "<a name='subtitle'></a>",
+                '<legend>subtitle</legend>',
+                '<li><span>first text line</span></li>',
+                '<li><span>second text line</span></li>',
+            ],
+        )
+
+    def test_whenTextHasTitleAndSubtitleAndTextAndFinalIsNested_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *title*
+                subtitle
+                    text
+                        nested
+            """),
+            [
+                '<title>title</title>',
+                '<legend>title ToC</legend>',
+                "<li><span><a href='#subtitle'>subtitle</a></span></li>",
+                "<a name='subtitle'></a>",
+                '<legend>subtitle</legend>',
+                '<li><span>text</span></li>',
+                '<li><span>nested</span></li>',
+            ],
+        )
+
+    def test_whenMultipleTextBlocks_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *title*
+
+                first subtitle
+                    first text line
+                    second text line
+
+
+                second subtitle
+                    first text line of the second block
+                    second text line of the second block
+            """),
+            [
+                '<title>title</title>',
+                '<legend>title ToC</legend>',
+                "<li><span><a href='#first subtitle'>first subtitle</a></span></li>",
+                "<li><span><a href='#second subtitle'>second subtitle</a></span></li>",
+                "<a name='first subtitle'></a>",
+                '<legend>first subtitle</legend>',
+                '<li><span>first text line</span></li>',
+                '<li><span>second text line</span></li>',
+                "<a name='second subtitle'></a>",
+                '<legend>second subtitle</legend>',
+                '<li><span>first text line of the second block</span></li>',
+                '<li><span>second text line of the second block</span></li>',
+            ],
+        )
+
+    def test_whenMultipleNestedTextBlocks_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+
+                bravo
+                    charlie
+                        delta
+                    echo
+
+
+                foxtrot
+                        golf
+                    hotel
+                    india
+                        juliett
+                kilo
+                        lima
+                    mike
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<li><span><a href='#foxtrot'>foxtrot</a></span></li>",
+                "<li><span><a href='#kilo'>kilo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span>charlie</span></li>',
+                '<li><span>delta</span></li>',
+                '<li><span>echo</span></li>',
+                "<a name='foxtrot'></a>",
+                '<legend>foxtrot</legend>',
+                '<li><span>golf</span></li>',
+                '<li><span>hotel</span></li>',
+                '<li><span>india</span></li>',
+                '<li><span>juliett</span></li>',
+                "<a name='kilo'></a>",
+                '<legend>kilo</legend>',
+                '<li><span>lima</span></li>',
+                '<li><span>mike</span></li>',
+            ],
+        )
+
+    def test_whenNarrativeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            '*alpha*narrative',
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+            ],
+        )
+
+    def test_whenNarrativeAttributeAndSubtitleAndParagraph_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    charlie
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>charlie</p>',
+            ],
+        )
+
+    def test_whenNarrativeAttributeAndSubtitleAndMultipleParagraphs_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    charlie
+                    delta
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>charlie</p>',
+                '<p>delta</p>',
+            ],
+        )
+
+    def test_whenNarrativeAttributeAndSubtitleAndMultipleComplexParagraphs_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    charlie
+                    delta
+
+
+                echo
+                    foxtrot
+                    golf
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<li><span><a href='#echo'>echo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>charlie</p>',
+                '<p>delta</p>',
+                "<a name='echo'></a>",
+                '<legend>echo</legend>',
+                '<p>foxtrot</p>',
+                '<p>golf</p>',
+            ],
+        )
+
+    def test_whenNarrativeAttributeAndCodeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    charlie
+                    **delta** echo
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>charlie</p>',
+                '<p><strong>delta</strong> echo</p>',
+            ],
+        )
+
+    def test_whenNarrativeAttributeAndTwoLineCodeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    charlie
+                    *delta
+
+                    echo*
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>charlie</p>',
+                '<pre><code>delta',
+                'echo</code></pre>',
+            ],
+        )
+
+    def test_whenNarrativeAttributeAndMultipleLineCodeAttributeAndCodeHasMassiveIndentation_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    charlie
+                    *delta
+                                      echo
+                    foxtrot*
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>charlie</p>',
+                '<pre><code>delta',
+                'echo',
+                'foxtrot</code></pre>',
+            ],
+        )
+
+    def test_whenNarrativeHasStrongTag_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    charlie **delta** echo
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>charlie <strong>delta</strong> echo</p>',
+            ],
+        )
+
+    def test_whenTextAttributeAndCodeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    charlie
+                    **delta**
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span>charlie</span></li>',
+                '<li><span><strong>delta</strong></span></li>',
+            ],
+        )
+
+    def test_whenTextAttributeAndTwoLineCodeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    charlie
+                    *delta
+
+                echo*
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span>charlie</span></li>',
+                '<pre><code>delta',
+                'echo</code></pre>',
+            ],
+        )
+
+    def test_whenTextAttributeAndMultipleLineCodeAttribute_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    charlie
+                    *delta
+                echo
+                        foxtrot*
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span>charlie</span></li>',
+                '<pre><code>delta',
+                'echo',
+                'foxtrot</code></pre>',
+            ],
+        )
+
+    def test_whenTextHasStrongTag_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    charlie **<$delta>** echo
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span>charlie <strong>&lt;$delta&gt;</strong> echo</span></li>',
+            ],
+        )
+
+    def test_whenListHasNestedCode_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    charlie
+                        *delta echo*
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span>charlie</span></li>',
+                '<pre><code>delta echo</code></pre>',
+            ],
+        )
+
+    def test_whenListHasTwoLevelsNestedCode_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    charlie
+                        delta
+                    **echo** foxtrot
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span>charlie</span></li>',
+                '<li><span>delta</span></li>',
+                '<li><span><strong>echo</strong> foxtrot</span></li>',
+            ],
+        )
+
+    def test_whenListHasNestedCodeWithLiteralStarCharacter_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    charlie
+                        *delta echo* foxtrot*
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span>charlie</span></li>',
+                '<pre><code>delta echo* foxtrot</code></pre>',
+            ],
+        )
+
+    def test_whenTextHasStrongTagAndLists_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    *charlie delta*
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<pre><code>charlie delta</code></pre>',
+            ],
+        )
+
+    def test_whenTextHasMultipleCodeblocksTagAndLists_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    **charlie**
+                    delta
+                    *echo foxtrot*
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span><strong>charlie</strong></span></li>',
+                '<li><span>delta</span></li>',
+                '<pre><code>echo foxtrot</code></pre>',
+            ],
+        )
+
+    def test_whenTextEscapedCodeBlocks_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    \*\*charlie\*\*
+                    delta
+                    **echo**
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span>**charlie**</span></li>',
+                '<li><span>delta</span></li>',
+                '<li><span><strong>echo</strong></span></li>',
+            ],
+        )
+
+    def test_whenTextEscapedCodeBlocksAndHasThreeNestedLevels_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    \*\*charlie\*\*
+                    delta
+                        echo
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span>**charlie**</span></li>',
+                '<li><span>delta</span></li>',
+                '<li><span>echo</span></li>',
+            ],
+        )
+
+    def test_whenTextEscapedStrongBlocks_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*
+                bravo
+                    \*\*charlie\*\* delta
+                    **echo**
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<li><span>**charlie** delta</span></li>',
+                '<li><span><strong>echo</strong></span></li>',
+            ],
+        )
+
+    def test_whenNarrativeAttributeAndSubtitleAndMultipleComplexParagraphsAndEscapedCodeBlocks_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    charlie
+                    \*delta\*
+
+
+                echo
+                    foxtrot
+                    golf
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<li><span><a href='#echo'>echo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>charlie</p>',
+                '<p>*delta*</p>',
+                "<a name='echo'></a>",
+                '<legend>echo</legend>',
+                '<p>foxtrot</p>',
+                '<p>golf</p>',
+            ],
+        )
+
+    def test_whenNarrativeAttributeAndSubtitleAndMultipleComplexParagraphsAndEscapedStrongBlocks_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    charlie \*\*delta\*\*
+
+
+                echo
+                    foxtrot
+                    golf
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<li><span><a href='#echo'>echo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>charlie **delta**</p>',
+                "<a name='echo'></a>",
+                '<legend>echo</legend>',
+                '<p>foxtrot</p>',
+                '<p>golf</p>',
+            ],
+        )
+
+    def test_whenNarrativeAndHasCodeBlockWithMultipleHtmlCharacters_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    *<>charlie
+                delta<>
+                echo<>*
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<pre><code>&lt;&gt;charlie',
+                'delta&lt;&gt;',
+                'echo&lt;&gt;</code></pre>',
+            ],
+        )
+
+    def test_whenNarrativeAndHasStrongBlockWithUrl_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    foo **/charlie/delta** echo
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>foo <strong>/charlie/delta</strong> echo</p>',
+            ],
+        )
+
+    def test_whenNarrativeAndHasMultipleStrongBlocks_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    foo **$charlie** **$delta** echo
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>foo <strong>$charlie</strong> <strong>$delta</strong> echo</p>',
+            ],
+        )
+
+    def test_whenNarrativeAndHasCodeBlocksWithEmptyBlankLines_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    *charlie
+
+                delta*
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<pre><code>charlie',
+                'delta</code></pre>',
+            ],
+        )
+
+    def test_whenNarrativeAndHasInlineCodeBlocksWithEmptyBlankLines_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    charlie **delta echo** foxtrot
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>charlie <strong>delta echo</strong> foxtrot</p>',
+            ],
+        )
+
+    def test_whenNarrativeWithImage_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    #charlie.png#
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                "<a href='/assets/charlie.png'><img class='imgbody' src='/assets/charlie.png'></a>",
+            ],
+        )
+
+    def test_whenNarrativeWithComplexBoldString_thenExpectedMarkupBuilt(self):
+        self.assert_markup_contains(
+            note(r"""
+                *alpha*narrative
+                bravo
+                    charlie **http://127.0.0.1/wolfcms/?/admin/login**
+            """),
+            [
+                '<title>alpha</title>',
+                '<legend>alpha ToC</legend>',
+                "<li><span><a href='#bravo'>bravo</a></span></li>",
+                "<a name='bravo'></a>",
+                '<legend>bravo</legend>',
+                '<p>charlie <strong>http://127.0.0.1/wolfcms/?/admin/login</strong></p>',
+            ],
         )
 
     def test_whenTextHasTitleAndSubtitle_thenExpectedMarkupBuilt(self):
         self.assert_exception_thrown(
-            '*title*\n' +
-            'Subtitle',
-            "Failed to parse, found title[Subtitle] with no text"
+            note(r"""
+                *title*
+                Subtitle
+            """),
+            'Failed to parse, found title[Subtitle] with no text',
         )
 
-    def test_whenTextHasTitleAndSubtitleAndText_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*title*\n' +
-            'subtitle\n' +
-            '    text',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>title</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>title ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#subtitle\'>subtitle</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'subtitle\'></a>\n' +
-            '            <legend>subtitle</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>text</span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
+    def test_whenNarrativeAttributeAndSubtitle_thenExceptionThrown(self):
+        self.assert_exception_thrown(
+            note(r"""
+                *alpha*narrative
+                bravo
+            """),
+            'Failed to parse, found title[bravo] with no text',
         )
 
-    def test_whenTextHasTitleAndSubtitleWithSpecialCharsAndText_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*title*\n' +
-            'subtitle\'\\foo\n' +
-            '    text',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>title</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>title ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#subtitle&#x27;\\\\foo\'>subtitle\'\\foo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'subtitle&#x27;\\\\foo\'></a>\n' +
-            '            <legend>subtitle\'\\foo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>text</span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
+    def test_whenListHasOneSpaceInFirstLevel_thenErrorThrown(self):
+        self.assert_exception_thrown(
+            note(r"""
+                *alpha*
+                 bravo
+            """),
+            'Unsupported number of spaces [1] in line [ bravo]',
         )
 
-    def test_whenTextHasTitleAndSubtitleAndTextAndBlankLine_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*title*\n' +
-            '\n' +
-            'subtitle\n' +
-            '    text',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>title</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>title ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#subtitle\'>subtitle</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'subtitle\'></a>\n' +
-            '            <legend>subtitle</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>text</span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
+    def test_whenListHasTooNestedElement_thenErrorThrown(self):
+        self.assert_exception_thrown(
+            note(r"""
+                *alpha*
+                bravo
+                                                                     charlie
+            """),
+            'Unsupported number of spaces [53] in line [                                                     charlie]',
         )
 
-    def test_whenTextHasTitleAndSubtitleAndTextAndMultipleLines_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*title*\n' +
-            '\n' +
-            'subtitle\n' +
-            '    first text line\n' +
-            '    second text line',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>title</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>title ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#subtitle\'>subtitle</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'subtitle\'></a>\n' +
-            '            <legend>subtitle</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>first text line</span></li>\n' +
-            '                    <li><span>second text line</span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenTextHasTitleAndSubtitleAndTextAndFinalIsNested_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*title*\n' +
-            'subtitle\n' +
-            '    text\n' +
-            '        nested',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>title</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>title ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#subtitle\'>subtitle</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'subtitle\'></a>\n' +
-            '            <legend>subtitle</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>text</span></li>\n' +
-            '                        <ul>\n' +
-            '                            <li><span>nested</span></li>\n' +
-            '                        </ul>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenMultipleTextBlocks_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*title*\n' +
-            '\n' +
-            'first subtitle\n' +
-            '    first text line\n' +
-            '    second text line\n'
-            '\n\n' +
-            'second subtitle\n' +
-            '    first text line of the second block\n' +
-            '    second text line of the second block',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>title</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>title ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#first subtitle\'>first subtitle</a></span></li>\n' +
-            '                    <li><span><a href=\'#second subtitle\'>second subtitle</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'first subtitle\'></a>\n' +
-            '            <legend>first subtitle</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>first text line</span></li>\n' +
-            '                    <li><span>second text line</span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'second subtitle\'></a>\n' +
-            '            <legend>second subtitle</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>first text line of the second block</span></li>\n' +
-            '                    <li><span>second text line of the second block</span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenMultipleNestedTextBlocks_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            '\n' +
-            'bravo\n' +
-            '    charlie\n' +
-            '        delta\n' +
-            '    echo\n'
-            '\n\n' +
-            'foxtrot\n' +
-            '        golf\n' +
-            '    hotel\n' +
-            '    india\n' +
-            '        juliett\n' +
-            'kilo\n' +
-            '        lima\n' +
-            '    mike\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                    <li><span><a href=\'#foxtrot\'>foxtrot</a></span></li>\n' +
-            '                    <li><span><a href=\'#kilo\'>kilo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>charlie</span></li>\n' +
-            '                        <ul>\n' +
-            '                            <li><span>delta</span></li>\n' +
-            '                        </ul>\n'
-            '                    <li><span>echo</span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'foxtrot\'></a>\n' +
-            '            <legend>foxtrot</legend>\n' +
-            '                <ul>\n' +
-            '                        <ul>\n' +
-            '                            <li><span>golf</span></li>\n' +
-            '                        </ul>\n' +
-            '                    <li><span>hotel</span></li>\n' +
-            '                    <li><span>india</span></li>\n' +
-            '                        <ul>\n' +
-            '                            <li><span>juliett</span></li>\n' +
-            '                        </ul>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'kilo\'></a>\n' +
-            '            <legend>kilo</legend>\n' +
-            '                <ul>\n' +
-            '                        <ul>\n' +
-            '                            <li><span>lima</span></li>\n' +
-            '                        </ul>\n'
-            '                    <li><span>mike</span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
+    def test_whenListHasTwoEmptyTitles_thenErrorThrown(self):
+        self.assert_exception_thrown(
+            note(r"""
+                *alpha*
+                bravo
+                charlie
+            """),
+            'Failed to parse, found title[charlie] with no text',
         )
 
     def test_whenTxtFileInNestedDirectory_thenHtmlFileWritten(self):
@@ -409,10 +835,12 @@ class ParserTest(unittest.TestCase):
             note_dir = src_dir / 'nested'
             note_dir.mkdir(parents=True)
             (note_dir / 'note.txt').write_text(
-                '*T\u00edtulo*\n'
-                'Section\n'
-                '    caf\u00e9 **ol\u00e9**\n',
-                encoding='utf-8'
+                note("""
+                    *T\u00edtulo*
+                    Section
+                        caf\u00e9 **ol\u00e9**
+                    """),
+                encoding='utf-8',
             )
             (note_dir / 'ignore.md').write_text('not a note', encoding='utf-8')
 
@@ -431,1128 +859,28 @@ class ParserTest(unittest.TestCase):
             dst_dir = Path(tmp_dir) / 'dst'
             src_dir.mkdir()
             (src_dir / 'note.txt').write_text(
-                '*Title*\n'
-                'Section\n'
-                '    text\n',
-                encoding='utf-8'
+                note(r"""
+                    *Title*
+                    Section
+                        text
+                    """),
+                encoding='utf-8',
             )
 
             notes2html.main([str(src_dir), str(dst_dir)])
 
             self.assertTrue((dst_dir / 'note.html').exists())
 
-    def test_whenNarrativeAttribute_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative',
+    def assert_markup_contains(self, input_text, snippets):
+        actual = parse(input_text.split('\n'))
+        self.assertTrue(actual.startswith('<!DOCTYPE html>'))
+        self.assertIn('<script>new Highlighter().run(document);</script>', actual)
+        position = -1
+        for snippet in snippets:
+            next_position = actual.find(snippet, position + 1)
+            self.assertNotEqual(-1, next_position, actual)
+            position = next_position
 
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAttributeAndSubtitle_thenExceptionThrown(self):
-        self.assert_exception_thrown(
-            '*alpha*narrative\n'
-            'bravo',
-            'Failed to parse, found title[bravo] with no text'
-        )
-
-    def test_whenNarrativeAttributeAndSubtitleAndParagraph_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n'
-            'bravo\n'
-            '    charlie',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>charlie</p>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAttributeAndSubtitleAndMultipleParagraphs_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n'
-            'bravo\n'
-            '    charlie\n' +
-            '    delta\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>charlie</p>\n' +
-            '                <p>delta</p>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAttributeAndSubtitleAndMultipleComplexParagraphs_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    charlie\n' +
-            '    delta\n' +
-            '\n\n'
-            'echo\n' +
-            '    foxtrot\n' +
-            '    golf\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                    <li><span><a href=\'#echo\'>echo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>charlie</p>\n' +
-            '                <p>delta</p>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'echo\'></a>\n' +
-            '            <legend>echo</legend>\n' +
-            '                <p>foxtrot</p>\n' +
-            '                <p>golf</p>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAttributeAndCodeAttribute_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    charlie\n' +
-            '    **delta** echo\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>charlie</p>\n' +
-            '                <p><strong>delta</strong> echo</p>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAttributeAndTwoLineCodeAttribute_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    charlie\n' +
-            '    *delta\n'
-            '\n'
-            '    echo*\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>charlie</p>\n' +
-            '                <pre><code>delta\n'
-            '\n' +
-            '    echo</code></pre>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAttributeAndMultipleLineCodeAttributeAndCodeHasMassiveIndentation_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    charlie\n' +
-            '    *delta\n' +
-            '                      echo\n' +
-            '    foxtrot*\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>charlie</p>\n' +
-            '                <pre><code>delta\n'
-            '                      echo\n'
-            '    foxtrot</code></pre>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeHasStrongTag_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    charlie **delta** echo\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>charlie <strong>delta</strong> echo</p>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenTextAttributeAndCodeAttribute_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    charlie\n' +
-            '    **delta**\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>charlie</span></li>\n' +
-            '                    <li><span><strong>delta</strong></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenTextAttributeAndTwoLineCodeAttribute_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    charlie\n' +
-            '    *delta\n'
-            '\n'
-            'echo*\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>charlie</span></li>\n' +
-            '                <pre><code>delta\n'
-            '\n' +
-            'echo</code></pre>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenTextAttributeAndMultipleLineCodeAttribute_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    charlie\n' +
-            '    *delta\n' +
-            'echo\n' +
-            '        foxtrot*\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>charlie</span></li>\n' +
-            '                <pre><code>delta\n'
-            'echo\n'
-            '        foxtrot</code></pre>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenTextHasStrongTag_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    charlie **<$delta>** echo\n',
-
-            '<!DOCTYPE html>\n'
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>charlie <strong>&lt;$delta&gt;</strong> echo</span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenListHasNestedCode_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    charlie\n'+
-            '        *delta echo*\n',
-
-            '<!DOCTYPE html>\n'
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>charlie</span></li>\n' +
-            '                <pre><code>delta echo</code></pre>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenListHasTwoLevelsNestedCode_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    charlie\n'+
-            '        delta\n' +
-            '    **echo** foxtrot\n',
-
-            '<!DOCTYPE html>\n'
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>charlie</span></li>\n' +
-            '                        <ul>\n' +
-            '                            <li><span>delta</span></li>\n' +
-            '                        </ul>\n' +
-            '                    <li><span><strong>echo</strong> foxtrot</span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenListHasNestedCodeWithLiteralStarCharacter_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    charlie\n'+
-            '        *delta echo* foxtrot*\n',
-
-            '<!DOCTYPE html>\n'
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>charlie</span></li>\n' +
-            '                <pre><code>delta echo* foxtrot</code></pre>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenListHasOneSpaceInFirstLevel_thenErrorThrown(self):
-        self.assert_exception_thrown(
-            '*alpha*\n' +
-            ' bravo\n',
-            'Unsupported number of spaces [1] in line [ bravo]'
-        )
-
-    def test_whenListHasTooNestedElement_thenErrorThrown(self):
-        self.assert_exception_thrown(
-            '*alpha*\n' +
-            'bravo\n' +
-            '                                                     charlie\n',
-            'Unsupported number of spaces [53] in line [                                                     charlie]'
-        )
-
-    def test_whenListHasTwoEmptyTitles_thenErrorThrown(self):
-        self.assert_exception_thrown(
-            '*alpha*\n' +
-            'bravo\n' +
-            'charlie\n',
-            'Failed to parse, found title[charlie] with no text'
-        )
-
-    def test_whenTextHasStrongTagAndLists_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    *charlie delta*\n',
-
-            '<!DOCTYPE html>\n'
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                <pre><code>charlie delta</code></pre>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenTextHasMultipleCodeblocksTagAndLists_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    **charlie**\n' +
-            '    delta\n' +
-            '    *echo foxtrot*\n',
-
-            '<!DOCTYPE html>\n'
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><strong>charlie</strong></span></li>\n' +
-            '                    <li><span>delta</span></li>\n' +
-            '                <pre><code>echo foxtrot</code></pre>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenTextEscapedCodeBlocks_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    \\*\\*charlie\\*\\*\n' +
-            '    delta\n' +
-            '    **echo**\n',
-
-            '<!DOCTYPE html>\n'
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>**charlie**</span></li>\n' +
-            '                    <li><span>delta</span></li>\n' +
-            '                    <li><span><strong>echo</strong></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenTextEscapedCodeBlocksAndHasThreeNestedLevels_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    \\*\\*charlie\\*\\*\n' +
-            '    delta\n' +
-            '        echo\n',
-
-            '<!DOCTYPE html>\n'
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>**charlie**</span></li>\n' +
-            '                    <li><span>delta</span></li>\n' +
-            '                        <ul>\n'
-            '                            <li><span>echo</span></li>\n' +
-            '                        </ul>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenTextEscapedStrongBlocks_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*\n' +
-            'bravo\n' +
-            '    \\*\\*charlie\\*\\* delta\n' +
-            '    **echo**\n',
-
-            '<!DOCTYPE html>\n'
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span>**charlie** delta</span></li>\n' +
-            '                    <li><span><strong>echo</strong></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAttributeAndSubtitleAndMultipleComplexParagraphsAndEscapedCodeBlocks_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    charlie\n' +
-            '    \\*delta\\*\n' +
-            '\n\n'
-            'echo\n' +
-            '    foxtrot\n' +
-            '    golf\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                    <li><span><a href=\'#echo\'>echo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>charlie</p>\n' +
-            '                <p>*delta*</p>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'echo\'></a>\n' +
-            '            <legend>echo</legend>\n' +
-            '                <p>foxtrot</p>\n' +
-            '                <p>golf</p>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAttributeAndSubtitleAndMultipleComplexParagraphsAndEscapedStrongBlocks_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    charlie \\*\\*delta\\*\\*\n' +
-            '\n\n'
-            'echo\n' +
-            '    foxtrot\n' +
-            '    golf\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                    <li><span><a href=\'#echo\'>echo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>charlie **delta**</p>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'echo\'></a>\n' +
-            '            <legend>echo</legend>\n' +
-            '                <p>foxtrot</p>\n' +
-            '                <p>golf</p>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAndHasCodeBlockWithMultipleHtmlCharacters_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    *<>charlie\n' +
-            'delta<>\n' +
-            'echo<>*\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <pre><code>&lt;&gt;charlie\n' +
-            'delta&lt;&gt;\n' +
-            'echo&lt;&gt;</code></pre>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAndHasStrongBlockWithUrl_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    foo **/charlie/delta** echo\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>foo <strong>/charlie/delta</strong> echo</p>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAndHasMultipleStrongBlocks_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    foo **$charlie** **$delta** echo\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>foo <strong>$charlie</strong> <strong>$delta</strong> echo</p>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAndHasCodeBlocksWithEmptyBlankLines_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    *charlie\n'
-            '\n'
-            'delta*\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <pre><code>charlie\n' +
-            '\n' +
-            'delta</code></pre>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeAndHasInlineCodeBlocksWithEmptyBlankLines_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    charlie **delta echo** foxtrot\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>charlie <strong>delta echo</strong> foxtrot</p>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeWithImage_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    #charlie.png#\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <a href=\'/assets/charlie.png\'><img class=\'imgbody\' src=\'/assets/charlie.png\'></a>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def test_whenNarrativeWithComplexBoldString_thenExpectedMarkupBuilt(self):
-        self.assert_markup_generated(
-            '*alpha*narrative\n' +
-            'bravo\n' +
-            '    charlie **http://127.0.0.1/wolfcms/?/admin/login**\n',
-
-            '<!DOCTYPE html>\n' +
-            '<html>\n' +
-            '    <head>\n' +
-            '        <title>alpha</title>\n' +
-            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
-            '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' +
-            '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' +
-            '        <script src="/assets/syntaxhighlighter.js"></script>\n' +
-            '    </head>\n' +
-            '    <body>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <legend>alpha ToC</legend>\n' +
-            '                <ul>\n' +
-            '                    <li><span><a href=\'#bravo\'>bravo</a></span></li>\n' +
-            '                </ul>\n' +
-            '        </fieldset>\n' +
-            '        <fieldset class=\'box\'>\n' +
-            '            <a name=\'bravo\'></a>\n' +
-            '            <legend>bravo</legend>\n' +
-            '                <p>charlie <strong>http://127.0.0.1/wolfcms/?/admin/login</strong></p>\n' +
-            '        </fieldset>\n' +
-            '    <script>new Highlighter().run(document);</script>\n' +
-            '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' +
-            '    </body>\n' +
-            '</html>'
-        )
-
-    def assert_markup_generated(self, input, expected):
-        actual = parse(input.split('\n'))
-        a = actual.split("\n")
-        e = expected.split("\n")
-        for i in range(0, len(a)):
-            self.assertEqual(e[i], a[i], '[' + actual + ']' + '\n[' + expected + ']\nactual[' + a[i] +']\nexpected[' + e[i] +']')
-        self.assertEqual(expected, actual)
-
-    def assert_exception_thrown(self, input, message):
+    def assert_exception_thrown(self, input_text, message):
         with self.assertRaisesRegex(Exception, re.escape(message)):
-            parse(input.split('\n'))
+            parse(input_text.split('\n'))

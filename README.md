@@ -29,6 +29,14 @@ python3 -m coverage run -m unittest discover
 python3 -m coverage html
 ```
 
+Optional development tools are configured in `pyproject.toml`. After installing the dev dependencies, run:
+
+```bash
+python3 -m tox
+python3 -m ruff check .
+python3 -m ruff format .
+```
+
 ### Syntax
 
 ```text

@@ -38,47 +38,49 @@ def parse(param):
     return BODY % (title['value'], title['value'], toc, body)
 
 
-BODY = '<!DOCTYPE html>\n' + \
-       '<html>\n' + \
-       '    <head>\n' + \
-       '        <title>%s</title>\n' + \
-       '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' + \
-       '        <link rel="stylesheet" type="text/css" href="/assets/main.css">\n' \
-       '        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">\n' + \
-       '        <script src="/assets/syntaxhighlighter.js"></script>\n' \
-       '    </head>\n' + \
-       '    <body>\n' + \
-       '        <fieldset class=\'box\'>\n' + \
-       '            <legend>%s ToC</legend>\n' + \
-       '                <ul>\n' + \
-       '%s' + \
-       '                </ul>\n' + \
-       '        </fieldset>\n' + \
-       '%s' + \
-       '    <script>new Highlighter().run(document);</script>\n' \
-       '    <script> (function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,\'script\',\'https://www.google-analytics.com/analytics.js\',\'ga\'); ga(\'create\', \'UA-106217827-1\', \'auto\'); ga(\'send\', \'pageview\'); </script>\n' + \
-       '    </body>\n' + \
-       '</html>'
+BODY = """<!DOCTYPE html>
+<html>
+    <head>
+        <title>%s</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="/assets/main.css">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+        <script src="/assets/syntaxhighlighter.js"></script>
+    </head>
+    <body>
+        <fieldset class='box'>
+            <legend>%s ToC</legend>
+                <ul>
+%s                </ul>
+        </fieldset>
+%s    <script>new Highlighter().run(document);</script>
+    <script> (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m = s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-106217827-1', 'auto'); ga('send', 'pageview'); </script>
+    </body>
+</html>"""
 
-BOX = '        <fieldset class=\'box\'>\n' + \
-      '            <a name=\'%s\'></a>\n' + \
-      '            <legend>%s</legend>\n' + \
-      '                <ul>\n' \
-      '%s' + \
-      '                </ul>\n' + \
-      '        </fieldset>\n'
+BOX = """        <fieldset class='box'>
+            <a name='%s'></a>
+            <legend>%s</legend>
+                <ul>
+%s                </ul>
+        </fieldset>
+"""
 
-BOX_NARRATIVE = \
-    '        <fieldset class=\'box\'>\n' + \
-    '            <a name=\'%s\'></a>\n' + \
-    '            <legend>%s</legend>\n' + \
-    '%s' + \
-    '        </fieldset>\n'
+BOX_NARRATIVE = """        <fieldset class='box'>
+            <a name='%s'></a>
+            <legend>%s</legend>
+%s        </fieldset>
+"""
 
 INDENTATION = '    '
 SECOND_LEVEL_ENTRY = '<li><span>%s</span></li>\n'
-THIRD_LEVEL_ENTRY = '<ul>\n                            <li><span>%s</span></li>\n                        </ul>\n'
-ENTRY_BLOCK = '                        <ul>\n%s                        </ul>\n'
+THIRD_LEVEL_ENTRY = """<ul>
+                            <li><span>%s</span></li>
+                        </ul>
+"""
+ENTRY_BLOCK = """                        <ul>
+%s                        </ul>
+"""
 TEXT_BOX_NARRAtIVE = '<p>%s</p>\n'
 ENTRY_CODE_START = '                <pre><code>'
 ENTRY_CODE_END = '</code></pre>\n'
@@ -159,7 +161,7 @@ def build_image(line):
         image = line[1:-1]
         if any(image.endswith(extension) for extension in IMG_EXTENSIONS):
             link = IMG_LINK % image
-            return "<a href='{1}'><img class='imgbody' src='{1}'></a>".format(link, link)
+            return "<a href='{0}'><img class='imgbody' src='{0}'></a>".format(link)
     return False
 
 
