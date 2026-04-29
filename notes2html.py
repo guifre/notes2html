@@ -1,24 +1,31 @@
+import argparse
 import html
-import os
 import re
+from pathlib import Path
 
-import sys
+
+def run(src_dir, dst_dir):
+    src_dir = Path(src_dir)
+    dst_dir = Path(dst_dir)
+
+    for a_file in src_dir.rglob('*.txt'):
+        out_file = dst_dir / a_file.relative_to(src_dir).with_suffix('.html')
+        out_file.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            out_file.write_text(
+                parse(a_file.read_text(encoding='utf-8').splitlines(True)),
+                encoding='utf-8'
+            )
+        except Exception as e:
+            print('Error when parsing [%s] [%s]' % (a_file, str(e)))
 
 
-def run():
-    if len(sys.argv) < 3:
-        raise Exception('Usage: $ python %s src_dir dst_dir' % sys.argv[0])
-
-    for a_file in [os.path.join(dp, f) for dp, dn, filenames in os.walk(sys.argv[1]) for f in filenames if os.path.splitext(f)[1] == '.txt']:
-        with open(a_file) as read:
-            out_file = sys.argv[2] + '/' + a_file.replace(sys.argv[1], '').replace('.txt', '.html')
-            if not os.path.exists(out_file[:out_file.rindex('/')]):
-                os.makedirs(out_file[:out_file.rindex('/')])
-            with open(out_file, 'w') as write:
-                try:
-                    write.write(parse(read.readlines()))
-                except Exception as e:
-                    print('Error when parsing [%s] [%s]' % (a_file, str(e)))
+def main(argv=None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('src_dir')
+    parser.add_argument('dst_dir')
+    args = parser.parse_args(argv)
+    run(args.src_dir, args.dst_dir)
 
 
 def parse(param):
@@ -235,4 +242,4 @@ def find_level(line):
 
 
 if __name__ == "__main__":
-    run()
+    main()

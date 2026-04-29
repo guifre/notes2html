@@ -1,9 +1,9 @@
 import re
-import sys
+import tempfile
 import unittest
+from pathlib import Path
 
-from unittest import mock
-from unittest.mock import MagicMock, patch
+import notes2html
 
 from notes2html import parse, run
 
@@ -402,21 +402,44 @@ class ParserTest(unittest.TestCase):
             '</html>'
         )
 
-    def test_whenNotEnoughArguments_thenExceptionRaised(self):
-        sys.argv = ['bin']
-        self.assertRaises(Exception, run)
+    def test_whenTxtFileInNestedDirectory_thenHtmlFileWritten(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            src_dir = Path(tmp_dir) / 'src'
+            dst_dir = Path(tmp_dir) / 'dst'
+            note_dir = src_dir / 'nested'
+            note_dir.mkdir(parents=True)
+            (note_dir / 'note.txt').write_text(
+                '*T\u00edtulo*\n'
+                'Section\n'
+                '    caf\u00e9 **ol\u00e9**\n',
+                encoding='utf-8'
+            )
+            (note_dir / 'ignore.md').write_text('not a note', encoding='utf-8')
 
-    def test_whenFilesNotFound_thenExceptionRaised(self):
-        sys.argv = ['bin', 'in']
-        self.assertRaises(Exception, run)
+            run(src_dir, dst_dir)
 
-    @mock.patch('notes2html.os.listdir')
-    def test_whenEmptyFiles_thenFilesOpen(self, mock_listdir):
-        sys.argv = ['bin', 'in', 'out', 'out']
-        mock_listdir.return_value = ['a.txt']
-        with patch('notes2html.open', create=True) as mock_open:
-            mock_open.return_value = MagicMock()
-            run()
+            generated_note = dst_dir / 'nested' / 'note.html'
+            self.assertTrue(generated_note.exists())
+            self.assertFalse((dst_dir / 'nested' / 'ignore.html').exists())
+            generated_html = generated_note.read_text(encoding='utf-8')
+            self.assertIn('<title>T\u00edtulo</title>', generated_html)
+            self.assertIn('caf\u00e9 <strong>ol\u00e9</strong>', generated_html)
+
+    def test_whenMainGetsSourceAndDestination_thenHtmlFileWritten(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            src_dir = Path(tmp_dir) / 'src'
+            dst_dir = Path(tmp_dir) / 'dst'
+            src_dir.mkdir()
+            (src_dir / 'note.txt').write_text(
+                '*Title*\n'
+                'Section\n'
+                '    text\n',
+                encoding='utf-8'
+            )
+
+            notes2html.main([str(src_dir), str(dst_dir)])
+
+            self.assertTrue((dst_dir / 'note.html').exists())
 
     def test_whenNarrativeAttribute_thenExpectedMarkupBuilt(self):
         self.assert_markup_generated(

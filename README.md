@@ -2,14 +2,40 @@
 
 I write notes of random topics and I wanted to keep them online for easy access. However, I hate writing HTML.
 
-text2html transforms my notes to basic HTML. The workflow is just writing and pushing a note. After this, a git hook triggers a text2html job that builds the notes and synchronizes it to http://guif.re
+notes2html transforms my notes to basic HTML. The workflow is just writing and pushing a note. After this, a git hook triggers a notes2html job that builds the notes and synchronizes it to http://guif.re
 
-To run unit tests: $ coverage run -m unittest discover; coverage html
+## Usage
+
+Run with Python 3 and pass the source notes directory plus the destination HTML directory:
+
+```bash
+python3 notes2html.py path/to/notes path/to/html
+```
+
+The converter recursively finds `.txt` files under the source directory and writes matching `.html` files under the destination directory.
+
+## Tests
+
+Run the unit tests with:
+
+```bash
+python3 -m unittest discover
+```
+
+To generate coverage locally:
+
+```bash
+python3 -m coverage run -m unittest discover
+python3 -m coverage html
+```
 
 ### Syntax
+
+```text
 *Document title*
 Title one
     paragraph one *bold*
     *start of code
     end of code*
     #image#
+```
