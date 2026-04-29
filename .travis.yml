@@ -1,13 +1,15 @@
 language: python
 python:
-  - "2.7"
+  - "3.10"
+  - "3.11"
+  - "3.12"
+  - "3.13"
 
 install:
-    - pip install coveralls
-    - pip install mock==2.0
-    - pip install pytest
-    - pip install pytest-cov
+  - python -m pip install --upgrade pip coverage coveralls
+
 script:
-    - nosetests --exe --with-coverage --cover-package=notes2html
+  - python -m coverage run -m unittest discover
+
 after_success:
-    - coveralls
+  - coveralls
