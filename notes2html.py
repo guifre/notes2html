@@ -1,4 +1,4 @@
-import cgi
+import html
 import os
 import re
 
@@ -18,7 +18,7 @@ def run():
                 try:
                     write.write(parse(read.readlines()))
                 except Exception as e:
-                    print 'Error when parsing [%s] [%s]' % (a_file, str(e))
+                    print('Error when parsing [%s] [%s]' % (a_file, str(e)))
 
 
 def parse(param):
@@ -94,7 +94,7 @@ def get_title(param):
 
 
 def escape(line):
-    line = cgi.escape(line)
+    line = html.escape(line, quote=False)
     while re.search(r'\*\*(.*?)\*\*', line):
         line = re.sub(r'\*\*(.*?)\*\*', '<strong>\\1</strong>', line.replace('\n', ''))
     line = re.sub(r'\\\*', '*', line.replace('\n', ''))
@@ -137,7 +137,7 @@ def line_finishes_code_block(current_level, line):
 
 
 def line_starts_code_block(current_level, line):
-    return line.startswith('*') and not line.startswith('**') and current_level != 'code' and not re.match('^\*[a-zA-Z0-9<>;&]+\*', line)
+    return line.startswith('*') and not line.startswith('**') and current_level != 'code' and not re.match(r'^\*[a-zA-Z0-9<>;&]+\*', line)
 
 
 def is_image(line):
@@ -209,7 +209,7 @@ def get_list_body(param, body_box, paragraph_box, is_narrative):
             raise Exception('%s in line [%s]' % (str(e), line))
 
     if title is not None:
-        if text is '':
+        if text == '':
             raise Exception('Failed to parse, found title[%s] with no text' % title)
         toc += '                    <li><span><a href=\'#%s\'>%s</a></span></li>\n' % (escape_single_quoted_attr_value(title), title)
         return html + body_box % (escape_single_quoted_attr_value(title), title, text), toc

@@ -1,9 +1,9 @@
 import re
-import string
 import sys
 import unittest
 
-from mock import mock, MagicMock, patch
+from unittest import mock
+from unittest.mock import MagicMock, patch
 
 from notes2html import parse, run
 
@@ -415,7 +415,7 @@ class ParserTest(unittest.TestCase):
         sys.argv = ['bin', 'in', 'out', 'out']
         mock_listdir.return_value = ['a.txt']
         with patch('notes2html.open', create=True) as mock_open:
-            mock_open.return_value = MagicMock(spec=file)
+            mock_open.return_value = MagicMock()
             run()
 
     def test_whenNarrativeAttribute_thenExpectedMarkupBuilt(self):
@@ -1523,7 +1523,7 @@ class ParserTest(unittest.TestCase):
         )
 
     def assert_markup_generated(self, input, expected):
-        actual = parse(string.split(input, '\n'))
+        actual = parse(input.split('\n'))
         a = actual.split("\n")
         e = expected.split("\n")
         for i in range(0, len(a)):
@@ -1531,5 +1531,5 @@ class ParserTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def assert_exception_thrown(self, input, message):
-        with self.assertRaisesRegexp(Exception, re.escape(message)):
-            parse(string.split(input, '\n'))
+        with self.assertRaisesRegex(Exception, re.escape(message)):
+            parse(input.split('\n'))
